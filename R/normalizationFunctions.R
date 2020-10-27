@@ -32,15 +32,19 @@ SelectGenesFromHistBreaks <- function(data.counts, breakss=100,
     return(gene.names)
 }
 
-#' EstimateNegativeControlGenesForRUV
+#' EstimateNegativeControlGenesForRUVg
+#' @description Extrapolates a list of negative genes for RUVg normalization.
+#' It organizes the n.tail.genes genes in histogram sampling
+#' n.genes.per.hist.break for each bin.
+#' @param de.genes A dataframe of DE genes resulting from DESeq2 or NOISeq.
+#' @param n.tail.genes the number of DE genes to take from the tail of the
+#' dataframe (default is 2000).
+#' @param counts.dataset the dataframe of counts of the genes
+#' (requires same rownames as DE genes).
+#' @param n.genes.per.hist.break number of genes to sample for each bin.
+#' @param threshold the p.adjusted threshold for significative genes.
 #'
-#' @param de.genes
-#' @param n.tail.genes
-#' @param counts.dataset
-#' @param n.genes.per.hist.break
-#' @param threshold
-#'
-#' @return
+#' @return the names of the negative genes
 #' @export
 #'
 #' @examples
