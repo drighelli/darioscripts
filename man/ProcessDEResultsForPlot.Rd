@@ -4,11 +4,19 @@
 \alias{ProcessDEResultsForPlot}
 \title{ProcessDEResultsForPlot}
 \usage{
-ProcessDEResultsForPlot(de.results, threshold = 0.05,
-  counts.dataframe = NULL, design.matrix = NULL, pos.ctrls.list = NULL)
+ProcessDEResultsForPlot(
+  de.results,
+  threshold = 0.05,
+  counts.dataframe = NULL,
+  design.matrix = NULL,
+  pos.ctrls.list = NULL
+)
 }
 \arguments{
 \item{pos.ctrls.list}{}
+}
+\value{
+
 }
 \description{
 ProcessDEResultsForPlot

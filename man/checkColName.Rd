@@ -9,6 +9,9 @@ checkColName(colname, colnames)
 \arguments{
 \item{colnames}{}
 }
+\value{
+
+}
 \description{
 Title
 }

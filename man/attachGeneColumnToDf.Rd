@@ -4,12 +4,19 @@
 \alias{attachGeneColumnToDf}
 \title{attachGeneColumnToDf}
 \usage{
-attachGeneColumnToDf(mainDf, genesMap, rowNamesIdentifier = c("entrezgene",
-  "ensembl", "symbol", "ENTREZID", "SYMBOL"), mapFromIdentifier = NULL,
-  mapToIdentifier = NULL)
+attachGeneColumnToDf(
+  mainDf,
+  genesMap,
+  rowNamesIdentifier = c("entrezgene", "ensembl", "symbol", "ENTREZID", "SYMBOL"),
+  mapFromIdentifier = NULL,
+  mapToIdentifier = NULL
+)
 }
 \arguments{
 \item{mapToIdentifier}{}
+}
+\value{
+
 }
 \description{
 attachGeneColumnToDf

@@ -4,11 +4,18 @@
 \alias{WriteDataFrameAsTsv}
 \title{WriteDataFrameAsTsv}
 \usage{
-WriteDataFrameAsTsv(data.frame.to.save, file.name.path, col.names = NA,
-  row.names = TRUE)
+WriteDataFrameAsTsv(
+  data.frame.to.save,
+  file.name.path,
+  col.names = NA,
+  row.names = TRUE
+)
 }
 \arguments{
 \item{row.names}{}
+}
+\value{
+
 }
 \description{
 WriteDataFrameAsTsv

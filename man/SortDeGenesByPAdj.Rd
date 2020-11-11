@@ -9,6 +9,9 @@ SortDeGenesByPAdj(de.genes)
 \arguments{
 \item{de.genes}{}
 }
+\value{
+
+}
 \description{
 SortDeGenesByPAdj
 }

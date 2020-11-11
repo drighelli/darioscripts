@@ -4,12 +4,23 @@
 \alias{PlotMAPlotCounts}
 \title{PlotMAPlotCounts}
 \usage{
-PlotMAPlotCounts(de.results, counts.dataframe, design.matrix,
-  show.plot.flag = TRUE, plotly.flag = FALSE, save.plot = FALSE,
-  plot.folder = NULL, prefix.plot = "MA_Plot", threshold = 0.05)
+PlotMAPlotCounts(
+  de.results,
+  counts.dataframe,
+  design.matrix,
+  show.plot.flag = TRUE,
+  plotly.flag = FALSE,
+  save.plot = FALSE,
+  plot.folder = NULL,
+  prefix.plot = "MA_Plot",
+  threshold = 0.05
+)
 }
 \arguments{
 \item{threshold}{}
+}
+\value{
+
 }
 \description{
 PlotMAPlotCounts

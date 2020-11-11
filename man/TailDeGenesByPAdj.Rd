@@ -9,6 +9,9 @@ TailDeGenesByPAdj(de.genes, n.genes = 10, threshold = 0.05)
 \arguments{
 \item{threshold}{}
 }
+\value{
+
+}
 \description{
 TailDeGenesByPAdj
 }

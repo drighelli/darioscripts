@@ -4,11 +4,17 @@
 \alias{convertGenesViaMouseDb}
 \title{convertGenesViaMouseDb}
 \usage{
-convertGenesViaMouseDb(gene.list, fromType = c("SYMBOL", "ENTREZID"),
-  toType = c("SYMBOL", "ENTREZID"))
+convertGenesViaMouseDb(
+  gene.list,
+  fromType = c("SYMBOL", "ENTREZID"),
+  toType = c("SYMBOL", "ENTREZID")
+)
 }
 \arguments{
 \item{toType}{}
+}
+\value{
+
 }
 \description{
 convertGenesViaMouseDb

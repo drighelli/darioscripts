@@ -4,14 +4,28 @@
 \alias{PlotPCAPlotlyFunction}
 \title{PlotPCAPlotlyFunction}
 \usage{
-PlotPCAPlotlyFunction(counts.data.frame, design.matrix, shapeColname = NULL,
-  colorColname = NULL, scale = FALSE, xPCA = "PC1", yPCA = "PC2",
-  plot.folder = NULL, prefix.plot = NULL, show.plot.flag = TRUE,
-  plotly.flag = FALSE, save.plot = FALSE, ellipse.flag = FALSE,
-  size = 2)
+PlotPCAPlotlyFunction(
+  counts.data.frame,
+  design.matrix,
+  shapeColname = NULL,
+  colorColname = NULL,
+  scale = FALSE,
+  xPCA = "PC1",
+  yPCA = "PC2",
+  plot.folder = NULL,
+  prefix.plot = NULL,
+  show.plot.flag = TRUE,
+  plotly.flag = FALSE,
+  save.plot = FALSE,
+  ellipse.flag = FALSE,
+  size = 2
+)
 }
 \arguments{
 \item{size}{}
+}
+\value{
+
 }
 \description{
 PlotPCAPlotlyFunction

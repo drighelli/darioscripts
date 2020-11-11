@@ -46,6 +46,7 @@ savePheatmapPdf <- function(plot, filename, width=10, height=10)
 #' @export
 #'
 #' @import plotly
+#' @import RColorBrewer
 #'
 #' @examples
 PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
@@ -80,7 +81,9 @@ PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
     sub.pca <- sub.pca[order(sub.pca$samples), ]
     design.matrix.o <- design.matrix[order(rownames(design.matrix)), ,
                                     drop=FALSE]
-
+    ncond <- length(unique(design.matrix[[colorColname]]))
+    nshape <- length(unique(design.matrix[[shapeColname]]))
+    mypalette <- colorRampPalette(RColorBrewer::brewer.pal(8, "Set2"))(ncond)
     if(dim(sub.pca)[1] == dim(design.matrix.o)[1])
     {
         new.sub.pca <- cbind(sub.pca, design.matrix.o)
@@ -146,6 +149,7 @@ PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
 
         ggp <- ggplot2::ggplot(new.sub.pca) +
             ggplot2::geom_point(aesStrObj, size=size) +
+            ggplot2::scale_shape_manual(values=1:nshape) +
             ggplot2::stat_ellipse(aesStrObjEll) +
             ggplot2::ggtitle(strings$title) +
             ggplot2::xlab(paste(xPCA, xproppca)) +
@@ -163,10 +167,12 @@ PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
         # }
         ggp <- ggplot2::ggplot(new.sub.pca) +
             ggplot2::geom_point(aesStrObj, size=size) +
+            ggplot2::scale_shape_manual(values=1:nshape) +
             ggplot2::ggtitle(strings$title) +
             ggplot2::xlab(paste(xPCA, xproppca)) +
             ggplot2::ylab(paste(yPCA, yproppca)) +
-            ggplot2::scale_color_manual(values=c( "red2", "blue2"))
+            ggplot2::scale_fill_manual(values=mypalette)
+            # ggplot2::scale_color_manual(values=c( "red2", "blue2"))
     }
 
 

@@ -2,14 +2,34 @@
 % Please edit documentation in R/normalizationFunctions.R
 \name{EstimateNegativeControlGenesForRUV}
 \alias{EstimateNegativeControlGenesForRUV}
-\title{EstimateNegativeControlGenesForRUV}
+\title{EstimateNegativeControlGenesForRUVg}
 \usage{
-EstimateNegativeControlGenesForRUV(de.genes, n.tail.genes = 2000,
-  counts.dataset, n.genes.per.hist.break = 1, threshold = 0.05)
+EstimateNegativeControlGenesForRUV(
+  de.genes,
+  n.tail.genes = 2000,
+  counts.dataset,
+  n.genes.per.hist.break = 1,
+  threshold = 0.05
+)
 }
 \arguments{
-\item{threshold}{}
+\item{de.genes}{A dataframe of DE genes resulting from DESeq2 or NOISeq.}
+
+\item{n.tail.genes}{the number of DE genes to take from the tail of the
+dataframe (default is 2000).}
+
+\item{counts.dataset}{the dataframe of counts of the genes
+(requires same rownames as DE genes).}
+
+\item{n.genes.per.hist.break}{number of genes to sample for each bin.}
+
+\item{threshold}{the p.adjusted threshold for significative genes.}
+}
+\value{
+the names of the negative genes
 }
 \description{
-EstimateNegativeControlGenesForRUV
+Extrapolates a list of negative genes for RUVg normalization.
+It organizes the n.tail.genes genes in histogram sampling
+n.genes.per.hist.break for each bin.
 }

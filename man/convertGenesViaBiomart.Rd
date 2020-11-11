@@ -4,11 +4,18 @@
 \alias{convertGenesViaBiomart}
 \title{convertGenesViaBiomart}
 \usage{
-convertGenesViaBiomart(specie = c("hg38", "mm10", "rnor6"), attrs = NULL,
-  filter = NULL, filter.values = NULL)
+convertGenesViaBiomart(
+  specie = c("hg38", "mm10", "rnor6"),
+  attrs = NULL,
+  filter = NULL,
+  filter.values = NULL
+)
 }
 \arguments{
 \item{filter.values}{}
+}
+\value{
+
 }
 \description{
 convertGenesViaBiomart

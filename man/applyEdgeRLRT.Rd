@@ -4,11 +4,19 @@
 \alias{applyEdgeRLRT}
 \title{applyEdgeRLRT}
 \usage{
-applyEdgeRLRT(fit, interaction.matrix, interaction.term = NULL,
-  p.threshold = 1, verbose = FALSE)
+applyEdgeRLRT(
+  fit,
+  interaction.matrix,
+  interaction.term = NULL,
+  p.threshold = 1,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{verbose}{}
+}
+\value{
+
 }
 \description{
 applyEdgeRLRT

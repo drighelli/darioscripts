@@ -11,6 +11,9 @@ applyEdgeRContrast(contrast, design, fit, p.threshold = 1, verbose = FALSE)
 
 \item{verbose}{}
 }
+\value{
+
+}
 \description{
 applyEdgeRContrast
 }

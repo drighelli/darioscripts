@@ -4,11 +4,20 @@
 \alias{applyEdgeRQLFit}
 \title{applyEdgeRQLFit}
 \usage{
-applyEdgeRQLFit(counts, factors, design, is.normalized = FALSE,
-  method = "TMM", verbose = FALSE)
+applyEdgeRQLFit(
+  counts,
+  factors,
+  design,
+  is.normalized = FALSE,
+  method = "TMM",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{is.normalized}{}
+}
+\value{
+
 }
 \description{
 applyEdgeRQLFit

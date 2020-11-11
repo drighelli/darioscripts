@@ -1,9 +1,7 @@
 
 #' filterLowCounts
 #'
-#' @param counts.dataframe
 #' @param is.normalized
-#' @param design.dataframe
 #' @param cond.col.name
 #' @param method.type
 #' @param cv.percentage
@@ -11,21 +9,24 @@
 #' @param seq.depth
 #' @param verbose
 #'
+
+#'
 #' @return
 #' @export
+#' @import SummarizedExperiment
 #' @importFrom NOISeq filtered.data
 #' @examples
-filterLowCounts <- function(counts.dataframe, is.normalized = c(TRUE, FALSE),
-                            design.dataframe, cond.col.name=NULL,
+filterLowCounts <- function(se, is.normalized = c(TRUE, FALSE),
+                            cond.col.name=NULL,
                             method.type = c("CPM", "Wilcoxon", "Proportion"),
                             cv.percentage=100, cpm.cutoff=1, seq.depth=NULL,
                             verbose=TRUE)
 {
-
+    stopifnot(methods::is(se, "SummarizedExperiment"))
     method.type <- match.arg(method.type)
     stopifnot(is.logical(is.normalized))
     stopifnot(!is.null(cond.col.name))
-    stopifnot((cond.col.name %in% colnames(design.dataframe)))
+    stopifnot((cond.col.name %in% colnames(colData(se))))
 
 
     design.dataframe <- design.dataframe[order(rownames(design.dataframe)), ,

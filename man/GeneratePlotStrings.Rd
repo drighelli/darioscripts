@@ -9,6 +9,9 @@ GeneratePlotStrings(path = NULL, prefix, plot.type)
 \arguments{
 \item{plot.type}{}
 }
+\value{
+
+}
 \description{
 GeneratePlotStrings
 }

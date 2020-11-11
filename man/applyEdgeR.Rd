@@ -4,14 +4,36 @@
 \alias{applyEdgeR}
 \title{applyEdgeR}
 \usage{
-applyEdgeR(counts, design.matrix, factors.column = NULL,
-  weight.columns = NULL, contrasts = NULL, useIntercept = FALSE,
-  p.threshold = 1, is.normalized = FALSE, verbose = FALSE)
+applyEdgeR(
+  counts,
+  design.matrix,
+  factors.column = NULL,
+  weight.columns = NULL,
+  contrasts = NULL,
+  useIntercept = FALSE,
+  p.threshold = 1,
+  is.normalized = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
-\item{p.threshold}{use 1 if you want all the results to be returned}
+\item{factors.column}{a character string indicating where to find the contrasts into
+the design.matrix argument}
 
-\item{verbose}{}
+\item{weight.columns}{a character indicating the colnames of the weights to
+add to the model.matrix function}
+
+\item{contrasts}{a character indicating the contrasts to test (i.e. "c1-c2"),
+more than one can be passed as a list}
+
+\item{p.threshold}{numeric cutoff for adjusted p-values (default is 1)}
+
+\item{is.normalized}{a logical indicating if the counts are normalized}
+
+\item{verbose}{logical for printing additional messages}
+}
+\value{
+
 }
 \description{
 applyEdgeR

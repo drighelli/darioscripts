@@ -3,13 +3,16 @@
 #'
 #' @param counts
 #' @param design.matrix
-#' @param factors.column
-#' @param weight.columns
-#' @param contrasts
+#' @param factors.column a character string indicating where to find the contrasts into
+#' the design.matrix argument
+#' @param weight.columns a character indicating the colnames of the weights to
+#' add to the model.matrix function
+#' @param contrasts a character indicating the contrasts to test (i.e. "c1-c2"),
+#' more than one can be passed as a list
 #' @param useIntercept
-#' @param p.threshold use 1 if you want all the results to be returned
-#' @param is.normalized
-#' @param verbose
+#' @param p.threshold numeric cutoff for adjusted p-values (default is 1)
+#' @param is.normalized a logical indicating if the counts are normalized
+#' @param verbose logical for printing additional messages
 #'
 #' @return
 #' @export

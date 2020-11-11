@@ -4,12 +4,20 @@
 \alias{NormalizeData}
 \title{NormalizeData}
 \usage{
-NormalizeData(data.to.normalize, norm.type = c("fqua", "uqua", "tmm", "ruvg"),
-  design.matrix = NULL, design.matrix.factors.column = NULL,
-  estimated.genes = NULL, is.log = FALSE)
+NormalizeData(
+  data.to.normalize,
+  norm.type = c("fqua", "uqua", "tmm", "ruvg"),
+  design.matrix = NULL,
+  design.matrix.factors.column = NULL,
+  estimated.genes = NULL,
+  is.log = FALSE
+)
 }
 \arguments{
 \item{is.log}{}
+}
+\value{
+
 }
 \description{
 NormalizeData

@@ -4,8 +4,15 @@
 \alias{constructInteractionMatrix}
 \title{constructInteractionMatrix}
 \usage{
-constructInteractionMatrix(design.matrix, genotype.col, genotype.ref = NULL,
-  condition.col, weight.col, weights = NULL, useIntercept = TRUE)
+constructInteractionMatrix(
+  design.matrix,
+  genotype.col,
+  genotype.ref = NULL,
+  condition.col,
+  weight.col,
+  weights = NULL,
+  useIntercept = TRUE
+)
 }
 \arguments{
 \item{design.matrix}{a design matrix of the experiment where each row

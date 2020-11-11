@@ -4,13 +4,22 @@
 \alias{filterLowCounts}
 \title{filterLowCounts}
 \usage{
-filterLowCounts(counts.dataframe, is.normalized = c(TRUE, FALSE),
-  design.dataframe, cond.col.name = NULL, method.type = c("CPM", "Wilcoxon",
-  "Proportion"), cv.percentage = 100, cpm.cutoff = 1, seq.depth = NULL,
-  verbose = TRUE)
+filterLowCounts(
+  se,
+  is.normalized = c(TRUE, FALSE),
+  cond.col.name = NULL,
+  method.type = c("CPM", "Wilcoxon", "Proportion"),
+  cv.percentage = 100,
+  cpm.cutoff = 1,
+  seq.depth = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{verbose}{}
+}
+\value{
+
 }
 \description{
 filterLowCounts

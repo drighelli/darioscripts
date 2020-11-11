@@ -4,11 +4,20 @@
 \alias{applyEdgeRGLMFit}
 \title{applyEdgeRGLMFit}
 \usage{
-applyEdgeRGLMFit(counts, factors, design, is.normalized = FALSE,
-  method = "TMM", verbose = FALSE)
+applyEdgeRGLMFit(
+  counts,
+  factors,
+  design,
+  is.normalized = FALSE,
+  method = "TMM",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{is.normalized}{}
+}
+\value{
+
 }
 \description{
 applyEdgeRGLMFit

@@ -9,6 +9,9 @@ createSignLabelsNumbers(proc.df, column.name)
 \arguments{
 \item{column.name}{}
 }
+\value{
+
+}
 \description{
 createSignLabelsNumbers
 }

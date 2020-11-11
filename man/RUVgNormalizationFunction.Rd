@@ -4,11 +4,21 @@
 \alias{RUVgNormalizationFunction}
 \title{RUVgNormalizationFunction}
 \usage{
-RUVgNormalizationFunction(data.to.normalize, design.matrix, desMatColStr,
-  estimated.gene.names, k = 1, isLog = FALSE, gene.names.col = NULL)
+RUVgNormalizationFunction(
+  data.to.normalize,
+  design.matrix,
+  desMatColStr,
+  estimated.gene.names,
+  k = 1,
+  isLog = FALSE,
+  gene.names.col = NULL
+)
 }
 \arguments{
 \item{gene.names.col}{}
+}
+\value{
+
 }
 \description{
 RUVgNormalizationFunction

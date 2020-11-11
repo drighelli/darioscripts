@@ -4,12 +4,23 @@
 \alias{PlotHistPvalPlot}
 \title{PlotHistPvalPlot}
 \usage{
-PlotHistPvalPlot(de.results, design.matrix, show.plot.flag = TRUE,
-  plotly.flag = FALSE, save.plot = FALSE, plot.folder = NULL,
-  prefix.plot = "PValue_Histogram", threshold = 0.05, nbins = 30)
+PlotHistPvalPlot(
+  de.results,
+  design.matrix,
+  show.plot.flag = TRUE,
+  plotly.flag = FALSE,
+  save.plot = FALSE,
+  plot.folder = NULL,
+  prefix.plot = "PValue_Histogram",
+  threshold = 0.05,
+  nbins = 30
+)
 }
 \arguments{
 \item{nbins}{}
+}
+\value{
+
 }
 \description{
 PlotHistPvalPlot
