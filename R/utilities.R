@@ -1,24 +1,35 @@
 
-#' WriteDataFrameAsTsv
+#' WriteDataFrameAsXls
 #'
 #' @param data.frame.to.save
 #' @param file.name.path
 #' @param col.names
-#' @param row.names
 #'
 #' @return
 #' @export
+#' @importFrom writexl write_xlsx
 #'
 #' @examples
 WriteDataFrameAsTsv <- function(data.frame.to.save, file.name.path,
-                                col.names=NA, row.names=TRUE)
+                                col.names=TRUE, row.names=TRUE)
 {
     file.name.path <- gsub(pattern=" ", replacement="_", x=file.name.path)
-    file.name <- paste0(file.name.path, ".tsv")
-    write.table(x=data.frame.to.save, file=file.name, quote=FALSE,
-                sep="\t", col.names=col.names, row.names=row.names)
-    message(file.name, " written on disk as TSV file!\n")
+    file.name <- paste0(file.name.path, ".xlsx")
+    writexl::write_xlsx(x=data.frame.to.save, path=file.name,
+                col_names=col.names)
+    message(file.name, " written on disk as XLSX file!\n")
 }
+
+
+# WriteDataFrameAsTsv <- function(data.frame.to.save, file.name.path,
+#                                 col.names=NA, row.names=TRUE)
+# {
+#     file.name.path <- gsub(pattern=" ", replacement="_", x=file.name.path)
+#     file.name <- paste0(file.name.path, ".tsv")
+#     write.table(x=data.frame.to.save, file=file.name, quote=FALSE,
+#                 sep="\t", col.names=col.names, row.names=row.names)
+#     message(file.name, " written on disk as TSV file!\n")
+# }
 
 ReadDataFrameFromTsv <- function(file.name.path, row.names.col=1,
                                 header.flag=TRUE, sep="\t", quote.char="")

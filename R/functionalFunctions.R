@@ -83,22 +83,48 @@ GenerateAndSaveHierarchicalGO <- function(go.results, go.folder, filename, ontol
 
 # exclude.electr.flag <- FALSE, go.label <- "GO:BP", include.graph.flag <- TRUE, path.label <- "KEGG", organism.name="rnorvegicus", significant.flag=TRUE, min.isect.size=0, correction.method="fdr"
 
-enrichPathwayGProfiler <- function(gene.list.to.enrich, organism.name=c("rnorvegicus", "mmusculus", "hsapiens"), exclude.electr.flag=FALSE, path.label=c("KEGG", "REAC"), significant.flag=FALSE, min.isect.size=0, correction.method="fdr", functional.folder, filename) {
+enrichPathwayGProfiler <- function(gene.list.to.enrich,
+                                   organism.name=c("rnorvegicus", "mmusculus", "hsapiens"),
+                                   exclude.electr.flag=FALSE,
+                                   path.label=c("KEGG", "REAC"),
+                                   significant.flag=FALSE,
+                                   # min.isect.size=0,
+                                   correction.method="fdr",
+                                   functional.folder, filename) {
     # require(assign("organism.db", organism.db))
-    require("gProfileR")
+    require("gprofiler2")
 
     path.folder <- UpdateFolderPath(functional.folder, "gProfiler", path.label)
     filename <- UpdateFilename(filename, path.label, "_PATHWAYS")
 
-    ksdf <- gprofiler(query=gene.list.to.enrich, organism=organism.name, significant=significant.flag, min_isect_size=min.isect.size, correction_method=correction.method, src_filter=path.label, exclude_iea=exclude.electr.flag)
-    ksdf$intersection <- gsub(",", "; ", ksdf$intersection)
+    ksdf <- gost(query=gene.list.to.enrich,
+                 organism=organism.name,
+                 significant=significant.flag,
+                 # min_isect_size=min.isect.size,
+                 correction_method=correction.method,
+                 sources=path.label,
+                 exclude_iea=exclude.electr.flag, evcodes=TRUE)
+    ksdf <- ksdf$result
+    ksdf$intersection <- gsub(",", ";", ksdf$intersection)
+    ksdf$evidence_codes <- gsub(",", ";", ksdf$evidence_codes)
+    ksdf$evidence_codes <- lapply(ksdf$evidence_codes, function(x) {
+        if(nchar(x)>32767) x <- substr(x, 1, 32765)
+        return(x)
+    })
+    ksdf$intersection <- lapply(ksdf$intersection, function(x) {
+        if(nchar(x)>32767) x <- substr(x, 1, 32765)
+        return(x)
+    })
+    ksdf <- ksdf[order(ksdf$p_value), ]
 
-    ksdf <- ksdf[order(ksdf$p.value), ]
+    # print(head(ksdf))
 
-    print(head(ksdf))
+    ksdf2 <- apply(ksdf, 2, type.convert)
 
-    if(dim(ksdf)[1]!=0) {
-        if(significant.flag) {
+    if(dim(ksdf)[1]!=0)
+    {
+        if(significant.flag)
+        {
             WriteDataFrameAsTsv(data.frame.to.save=ksdf, file.name.path=file.path(path.folder, paste0(filename, "_significant")))
         } else {
             WriteDataFrameAsTsv(data.frame.to.save=ksdf[which(ksdf$significant==TRUE),], file.name.path=file.path(path.folder, paste0(filename, "_significant")))
@@ -113,20 +139,44 @@ enrichPathwayGProfiler <- function(gene.list.to.enrich, organism.name=c("rnorveg
 }
 
 
-enrichGOGProfiler <- function(gene.list.to.enrich, organism.name=c("rnorvegicus", "mmusculus"), exclude.electr.flag=FALSE, ontology=c("BP", "MF", "CC"),  significant.flag=FALSE, min.isect.size=0, correction.method="fdr", functional.folder, filename) {
+enrichGOGProfiler <- function(gene.list.to.enrich,
+                              organism.name=c("rnorvegicus", "mmusculus"),
+                              exclude.electr.flag=FALSE,
+                              ontology=c("BP", "MF", "CC"),
+                              significant.flag=FALSE,
+                              min.isect.size=0,
+                              correction.method="fdr",
+                              functional.folder,
+                              filename)
+{
     # require(organism.db)
-    require("gProfileR")
+    require("gprofiler2")
 
     go.folder <- UpdateFolderPath(functional.folder, "gProfiler", "GO")
     filename <- UpdateFilename(filename, paste0("gProfiler_GO_", ontology))
 
     gprof.ontology <- paste0("GO:", ontology)
 
-    ego <- gprofiler(query=gene.list.to.enrich, organism=organism.name, significant=significant.flag, min_isect_size=min.isect.size, correction_method=correction.method, src_filter=gprof.ontology, exclude_iea=exclude.electr.flag)
+    ego <- gost(query=gene.list.to.enrich,
+                organism=organism.name,
+                significant=significant.flag,
+                # min_isect_size=min.isect.size,
+                correction_method=correction.method,
+                sources=gprof.ontology,
+                exclude_iea=exclude.electr.flag, evcodes=TRUE)
+    ego <- ego$result
+    ego$intersection <- gsub(",", ";", ego$intersection)
+    ego$evidence_codes <- gsub(",", ";", ego$evidence_codes)
+    ego$evidence_codes <- lapply(ego$evidence_codes, function(x) {
+        if(nchar(x)>32767) x <- substr(x, 1, 32765)
 
-    ego$intersection <- gsub(",", "; ", ego$intersection)
-    ego<-ego[order(ego$p.value),]
-    print(head(ego))
+                return(x)
+            })
+    ego$intersection <- lapply(ego$intersection, function(x) {
+        if(nchar(x)>32767) x <- substr(x, 1, 32765)
+        return(x)
+    })
+    ego<-ego[order(ego$p_value),]
 
     if(dim(ego)[1]!=0) {
         if(significant.flag) {
