@@ -16,7 +16,10 @@ Venn3de(
   intersection.exclusion.flag = FALSE,
   plot.dir = NULL,
   enrich.lists.flag = FALSE,
-  conversion.map = NULL
+  conversion.map = NULL,
+  plot.heatmap = FALSE,
+  expression.data.list = NULL,
+  expression.colname = "logFC"
 )
 }
 \arguments{
@@ -34,15 +37,27 @@ Venn3de(
 
 \item{title}{an optional title for the Venn plot}
 
-\item{intersection.flag}{a boolean for saving the lists of intersected elements}
+\item{intersection.flag}{a boolean for saving the lists of intersected
+elements}
 
-\item{intersection.exclusion.flag}{a boolean for saving the lists of unique sets lists}
+\item{intersection.exclusion.flag}{a boolean for saving the lists of unique
+sets lists}
 
 \item{plot.dir}{the directory to save the intersections}
 
-\item{enrich.lists.flag}{If to perform the functional enrichment for the produced lists}
+\item{enrich.lists.flag}{If to perform the functional enrichment for the
+produced lists}
 
-\item{conversion.map}{a data.frame with gene ids conversions (i.e. Ensembl_id, Gene_name)}
+\item{conversion.map}{a data.frame with gene ids conversions
+(i.e. Ensembl_id, Gene_name)}
+
+\item{plot.heatmap}{flag indicating if plotting a heatmap for the main
+intersection}
+
+\item{expression.data.list}{a list of dataframe/matrix with rownames with
+expression values ordered for x,y,z}
+
+\item{expression.colname}{the name of the column within the expression values}
 }
 \description{
 TBW

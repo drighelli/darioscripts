@@ -9,3 +9,21 @@ License: GPL3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Imports:
+    AnnotationDbi,
+    biomaRt,
+    EDASeq,
+    org.Mm.eg.db,
+    NOISeq,
+    RUVSeq,
+    edgeR,
+    ggplot2,
+    grDevices,
+    grid,
+    limma,
+    plotly,
+    plyr,
+    preprocessCore,
+    RColorBrewer,
+    SummarizedExperiment,
+    writexl

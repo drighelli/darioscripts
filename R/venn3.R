@@ -8,11 +8,20 @@
 #' @param label2 the label for the y list
 #' @param label3 the label for the z list
 #' @param title an optional title for the Venn plot
-#' @param intersection.flag a boolean for saving the lists of intersected elements
-#' @param intersection.exclusion.flag a boolean for saving the lists of unique sets lists
+#' @param intersection.flag a boolean for saving the lists of intersected
+#' elements
+#' @param intersection.exclusion.flag a boolean for saving the lists of unique
+#' sets lists
 #' @param plot.dir the directory to save the intersections
-#' @param enrich.lists.flag If to perform the functional enrichment for the produced lists
-#' @param conversion.map a data.frame with gene ids conversions (i.e. Ensembl_id, Gene_name)
+#' @param enrich.lists.flag If to perform the functional enrichment for the
+#' produced lists
+#' @param conversion.map a data.frame with gene ids conversions
+#' (i.e. Ensembl_id, Gene_name)
+#' @param plot.heatmap flag indicating if plotting a heatmap for the main
+#' intersection
+#' @param expression.data.list a list of dataframe/matrix with rownames with
+#' expression values ordered for x,y,z
+#' @param expression.colname the name of the column within the expression values
 #'
 #' @return NULL
 #' @export
@@ -25,7 +34,10 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
                     intersection.exclusion.flag=FALSE,
                     plot.dir=NULL,
                     enrich.lists.flag=FALSE,
-                    conversion.map=NULL)
+                    conversion.map=NULL,
+                    plot.heatmap=FALSE,
+                    expression.data.list=NULL,
+                    expression.colname="logFC")
 {
 
     a=x
@@ -55,7 +67,7 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
     outputName <- UpdateFilename(filename="VennDiagram",
                                  label1, label2, label3, extension="pdf")
     out.path.name <- UpdateFolderPath(plot.dir, "Venn3")
-    prefix="venn3"
+    prefix=""
 
     file.path.name <- file.path(out.path.name, outputName)
     # dev.new()
@@ -74,16 +86,45 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
         }
 
         abc <- intersect(intersect(a, b), c)
-        SaveInteserctionsList(gene.list=abc, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix, labels.list=c(label1, paste0("AND_", label2), paste0("AND_", label3)), enrich.lists.flag=enrich.lists.flag)
+        expression.data=NULL
+        if(plot.heatmap && (!is.null(abc)))
+        {
+            expressions.list <- lapply(expression.data.list, function(ed)
+            {
+                ed <- ed[order(rownames(ed)),]
+                ed[which(rownames(ed) %in% abc),expression.colname, drop=FALSE]
+            })
+            expression.data <- rlist::list.cbind(expressions.list)
+            colnames(expression.data) <- c(label1, label2, label3)
+        }
+
+
+        SaveInteserctionsList(gene.list=abc,
+                        conversion.map=conversion.map,
+                        root.dir=out.path.name, prefix=prefix,
+                        labels.list=c(label1, paste0("AND_", label2),
+                                    paste0("AND_", label3)),
+                        enrich.lists.flag=enrich.lists.flag,
+                        heatmap.flag=plot.heatmap,
+                        expression.data=expression.data)
 
         ab <- setdiff(intersect(a, b), abc)
-        SaveInteserctionsList(gene.list=ab, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix, labels.list=c(label1, paste0("AND_",label2)), enrich.lists.flag=enrich.lists.flag)
+        SaveInteserctionsList(gene.list=ab, conversion.map=conversion.map,
+                            root.dir=out.path.name, prefix=prefix,
+                            labels.list=c(label1, paste0("AND_",label2)),
+                            enrich.lists.flag=enrich.lists.flag)
 
         bc <- setdiff(intersect(b, c), abc)
-        SaveInteserctionsList(gene.list=bc, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix, labels.list=c(label2, paste0("AND_", label3)), enrich.lists.flag=enrich.lists.flag)
+        SaveInteserctionsList(gene.list=bc, conversion.map=conversion.map,
+                            root.dir=out.path.name, prefix=prefix,
+                            labels.list=c(label2, paste0("AND_", label3)),
+                            enrich.lists.flag=enrich.lists.flag)
 
         ac <- setdiff(intersect(a, c), abc)
-        SaveInteserctionsList(gene.list=ac, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix, labels.list=c(label1, paste0("AND_", label3)), enrich.lists.flag=enrich.lists.flag)
+        SaveInteserctionsList(gene.list=ac, conversion.map=conversion.map,
+                            root.dir=out.path.name, prefix=prefix,
+                            labels.list=c(label1, paste0("AND_", label3)),
+                            enrich.lists.flag=enrich.lists.flag)
 
         # union.of.intersections <- union(union(ab, bc), union(ac, abc))
         # SaveInteserctionsList(gene.list=union.of.intersections, conversion.map=conversion.map, root.dir=out.path.name, prefix=paste0(prefix, "_union_of_intersections"), labels.list=c(label1, label2, label3), enrich.lists.flag=enrich.lists.flag)
@@ -97,52 +138,87 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
         if(is.null(plot.dir)) {
             stop("Please provide a directory where to save VENN results!")
         }
-        res.path <- file.path(plot.dir, "Venn3", paste0(plot.combined.string,"_gene_lists"))
-        dir.create(res.path, recursive=TRUE, showWarnings=FALSE)
+        # res.path <- file.path(plot.dir, "Venn3", paste0(plot.combined.string,"_gene_lists"))
+        # dir.create(res.path, recursive=TRUE, showWarnings=FALSE)
 
         a.not.b <-  setdiff(a, b)
-        SaveInteserctionsList(gene.list=a.not.b, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label1, paste0("_NOT_",label2), enrich.lists.flag=enrich.lists.flag))
+        # SaveInteserctionsList(gene.list=a.not.b, conversion.map=conversion.map,
+        #                     root.dir=out.path.name, prefix=prefix,
+        #                     labels.list=c(label1, paste0("_NOT_",label2)),
+        #                     enrich.lists.flag=enrich.lists.flag)
 
         b.not.a <-  setdiff(b, a)
-        SaveInteserctionsList(gene.list=b.not.a, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label2, paste0("_NOT_",label1)), enrich.lists.flag=enrich.lists.flag)
+        # SaveInteserctionsList(gene.list=b.not.a, conversion.map=conversion.map,
+        #                     root.dir=out.path.name, prefix=prefix,
+        #                     labels.list=c(label2, paste0("_NOT_",label1)),
+        #                     enrich.lists.flag=enrich.lists.flag)
 
-        c.not.b <-  setdiff(c, b)
-        SaveInteserctionsList(gene.list=c.not.b, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label3, paste0("_NOT_",label2)), enrich.lists.flag=enrich.lists.flag)
+        # c.not.b <-  setdiff(c, b)
+        # SaveInteserctionsList(gene.list=c.not.b, conversion.map=conversion.map,
+        #                     root.dir=out.path.name, prefix=prefix,
+        #                     labels.list=c(label3, paste0("_NOT_",label2)),
+        #                     enrich.lists.flag=enrich.lists.flag)
 
-        b.not.c <-  setdiff(b, c)
-        SaveInteserctionsList(gene.list=b.not.c, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label2, paste0("_NOT_", label3)), enrich.lists.flag=enrich.lists.flag)
+        # b.not.c <-  setdiff(b, c)
+        # SaveInteserctionsList(gene.list=b.not.c, conversion.map=conversion.map,
+        #                     root.dir=out.path.name, prefix=prefix,
+        #                     labels.list=c(label2, paste0("_NOT_", label3)),
+        #                     enrich.lists.flag=enrich.lists.flag)
 
-        a.not.c <-  setdiff(a, c)
-        SaveInteserctionsList(gene.list=a.not.c, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label1, paste0("_NOT_", label3)), enrich.lists.flag=enrich.lists.flag)
+        # a.not.c <-  setdiff(a, c)
+        # SaveInteserctionsList(gene.list=a.not.c, conversion.map=conversion.map,
+        #                     root.dir=out.path.name, prefix=prefix,
+        #                     labels.list=c(label1, paste0("_NOT_", label3)),
+        #                     enrich.lists.flag=enrich.lists.flag)
 
         c.not.a <-  setdiff(c, a)
-        SaveInteserctionsList(gene.list=c.not.a, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label3, paste0("_NOT_", label1)), enrich.lists.flag=enrich.lists.flag)
+        # SaveInteserctionsList(gene.list=c.not.a, conversion.map=conversion.map,
+        #                     root.dir=out.path.name, prefix=prefix,
+        #                     labels.list=c(label3, paste0("_NOT_", label1)),
+        #                     enrich.lists.flag=enrich.lists.flag)
 
         a.not.bc <- setdiff(a.not.b, c)
-        SaveInteserctionsList(gene.list=a.not.bc, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label1, paste0("_NOT_", label2), paste0("_NOT_", label3)), enrich.lists.flag=enrich.lists.flag)
+        SaveInteserctionsList(gene.list=a.not.bc, conversion.map=conversion.map,
+                            root.dir=out.path.name, prefix=prefix,
+                            labels.list=c(label1, paste0("_NOT_", label2), paste0("_NOT_", label3)),
+                            enrich.lists.flag=enrich.lists.flag)
 
         b.not.ac <- setdiff(b.not.a, c)
-        SaveInteserctionsList(gene.list=b.not.ac, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label2, paste0("_NOT_", label1), paste0("_NOT_", label3)), enrich.lists.flag=enrich.lists.flag)
+        SaveInteserctionsList(gene.list=b.not.ac, conversion.map=conversion.map,
+                            root.dir=out.path.name, prefix=prefix,
+                            labels.list=c(label2, paste0("_NOT_", label1), paste0("_NOT_", label3)),
+                            enrich.lists.flag=enrich.lists.flag)
 
         c.not.ab <- setdiff(c.not.a, b)
-        SaveInteserctionsList(gene.list=c.not.ab, conversion.map=conversion.map, root.dir=out.path.name, prefix=prefix,
-                              labels.list=c(label3, paste0("_NOT_", label1), paste0("_NOT_", label2)), enrich.lists.flag=enrich.lists.flag)
+        SaveInteserctionsList(gene.list=c.not.ab, conversion.map=conversion.map,
+                            root.dir=out.path.name, prefix=prefix,
+                            labels.list=c(label3, paste0("_NOT_", label1), paste0("_NOT_", label2)),
+                            enrich.lists.flag=enrich.lists.flag)
 
     }
 }
 
 
+#' SaveInteserctionsList
+#'
+#' @param gene.list
+#' @param conversion.map
+#' @param root.dir
+#' @param prefix
+#' @param labels.list
+#' @param enrich.lists.flag
+#' @param heatmap.flag
+#' @param expression.data
+#'
+#' @return
+#' @export
+#'
+#' @examples
 SaveInteserctionsList <- function(gene.list, conversion.map,
                             root.dir, prefix, labels.list,
-                            enrich.lists.flag=FALSE)
+                            enrich.lists.flag=FALSE,
+                            heatmap.flag=FALSE,
+                            expression.data=NULL)
 {
 
     for(lbl in labels.list) {
@@ -152,15 +228,24 @@ SaveInteserctionsList <- function(gene.list, conversion.map,
     out.dir <- UpdateFolderPath(root.dir, prefix)
     filename <- UpdateFilename(prefix, "genes")
 
-    if(!is.null(conversion.map)) {
-        gene.list.df <- CreateConvertedDataframe(gene.list, conversion.map)
-    } else {
+    # if(!is.null(conversion.map)) {
+    #     gene.list.df <- CreateConvertedDataframe(gene.list, conversion.map)
+    # } else {
         gene.list.df <- as.data.frame(gene.list)
-    }
+    # }
 
     WriteDataFrameAsTsv(data.frame.to.save=gene.list.df,
                     file.name.path=file.path(out.dir, filename),
                     col.names=TRUE, row.names=FALSE)
+
+    if(heatmap.flag)
+    {
+        # stopifnot(!is.null(expression.data))
+        if(length(gene.list)>2)
+            plotPHeatmap(expression.data, filename=file.path(out.dir, filename),
+                    conversion.map=conversion.map)
+
+    }
 
     if(enrich.lists.flag)
     {

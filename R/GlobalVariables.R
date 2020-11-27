@@ -1,3 +1,13 @@
+#' Title
+#'
+#' @param path
+#' @param prefix
+#' @param plot.type
+#'
+#' @return
+#' @export
+#'
+#' @examples
 GeneratePlotStrings <- function(path=NULL, prefix, plot.type) {
   title <- gsub(pattern = "_", replacement = " ", x = UpdatePrefix(prefix, plot.type))
 
@@ -10,6 +20,15 @@ GeneratePlotStrings <- function(path=NULL, prefix, plot.type) {
 }
 
 
+#' Title
+#'
+#' @param prefix
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 UpdatePrefix <- function(prefix, ...) {
   # new.prefix <- paste(prefix, postix, sep=sep)
   dots <- list(...)
@@ -25,6 +44,15 @@ UpdatePrefix <- function(prefix, ...) {
   return(prefix)
 }
 
+#' Title
+#'
+#' @param path
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 UpdateFolderPath <- function(path, ...) {
   dots <- list(...)
   if(length(dots) != 0) {
@@ -39,6 +67,16 @@ UpdateFolderPath <- function(path, ...) {
   return(path)
 }
 
+#' Title
+#'
+#' @param filename
+#' @param ...
+#' @param extension
+#'
+#' @return
+#' @export
+#'
+#' @examples
 UpdateFilename <- function(filename, ..., extension=NULL) {
   dots <- list(...)
   filename <- gsub(pattern = " ", replacement = "_", x = filename)

@@ -2,21 +2,21 @@
 % Please edit documentation in R/utilities.R
 \name{WriteDataFrameAsTsv}
 \alias{WriteDataFrameAsTsv}
-\title{WriteDataFrameAsTsv}
+\title{WriteDataFrameAsXls}
 \usage{
 WriteDataFrameAsTsv(
   data.frame.to.save,
   file.name.path,
-  col.names = NA,
+  col.names = TRUE,
   row.names = TRUE
 )
 }
 \arguments{
-\item{row.names}{}
+\item{col.names}{}
 }
 \value{
 
 }
 \description{
-WriteDataFrameAsTsv
+WriteDataFrameAsXls
 }

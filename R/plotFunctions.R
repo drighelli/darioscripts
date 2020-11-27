@@ -1,27 +1,4 @@
-#' savePheatmapPdf
-#'
-#' @param plot
-#' @param filename
-#' @param width
-#' @param height
-#'
-#' @return
-#' @export
-#'
-#' @importFrom grid grid.newpage grid.draw
-#' @importFrom grDevices pdf dev.off
-#'
-#' @examples
-savePheatmapPdf <- function(plot, filename, width=10, height=10)
-{
-    x <- plot
-    stopifnot(!missing(x))
-    stopifnot(!missing(filename))
-    grDevices::pdf(filename, width=width, height=height)
-    grid::grid.newpage()
-    grid::grid.draw(x$gtable)
-    grDevices::dev.off()
-}
+
 
 ###### PCA FUNCTIONS
 

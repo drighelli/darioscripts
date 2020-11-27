@@ -54,7 +54,6 @@ ReadDataFrameFromTsv <- function(file.name.path, row.names.col=1,
 convertGenesViaMouseDb <- function(gene.list, fromType=c("SYMBOL", "ENTREZID"),
                                 toType=c("SYMBOL", "ENTREZID"))
 {
-    require("org.Mm.eg.db")
     annotated.map <- AnnotationDbi::select(org.Mm.eg.db,
                                         keys=gene.list,
                                         keytype=fromType,

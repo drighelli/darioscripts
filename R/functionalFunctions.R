@@ -83,6 +83,21 @@ GenerateAndSaveHierarchicalGO <- function(go.results, go.folder, filename, ontol
 
 # exclude.electr.flag <- FALSE, go.label <- "GO:BP", include.graph.flag <- TRUE, path.label <- "KEGG", organism.name="rnorvegicus", significant.flag=TRUE, min.isect.size=0, correction.method="fdr"
 
+#' Title
+#'
+#' @param gene.list.to.enrich
+#' @param organism.name
+#' @param exclude.electr.flag
+#' @param path.label
+#' @param significant.flag
+#' @param correction.method
+#' @param functional.folder
+#' @param filename
+#'
+#' @return
+#' @export
+#'
+#' @examples
 enrichPathwayGProfiler <- function(gene.list.to.enrich,
                                    organism.name=c("rnorvegicus", "mmusculus", "hsapiens"),
                                    exclude.electr.flag=FALSE,
@@ -105,21 +120,12 @@ enrichPathwayGProfiler <- function(gene.list.to.enrich,
                  sources=path.label,
                  exclude_iea=exclude.electr.flag, evcodes=TRUE)
     ksdf <- ksdf$result
-    ksdf$intersection <- gsub(",", ";", ksdf$intersection)
-    ksdf$evidence_codes <- gsub(",", ";", ksdf$evidence_codes)
-    ksdf$evidence_codes <- lapply(ksdf$evidence_codes, function(x) {
-        if(nchar(x)>32767) x <- substr(x, 1, 32765)
-        return(x)
-    })
-    ksdf$intersection <- lapply(ksdf$intersection, function(x) {
-        if(nchar(x)>32767) x <- substr(x, 1, 32765)
-        return(x)
-    })
+    ksdf$intersection <- .elaborategProfilerListToPrint(ksdf$intersection)
+    ksdf$evidence_codes <- .elaborategProfilerListToPrint(ksdf$evidence_codes)
+    ksdf$parents <- .elaborategProfilerListToPrint(ksdf$parents)
     ksdf <- ksdf[order(ksdf$p_value), ]
 
     # print(head(ksdf))
-
-    ksdf2 <- apply(ksdf, 2, type.convert)
 
     if(dim(ksdf)[1]!=0)
     {
@@ -134,13 +140,29 @@ enrichPathwayGProfiler <- function(gene.list.to.enrich,
         message("no results produced for ", filename)
     }
 
-
-    return(ksdf)
+    return(NULL)
+    # return(ksdf)
 }
 
 
+#' Title
+#'
+#' @param gene.list.to.enrich
+#' @param organism.name
+#' @param exclude.electr.flag
+#' @param ontology
+#' @param significant.flag
+#' @param min.isect.size
+#' @param correction.method
+#' @param functional.folder
+#' @param filename
+#'
+#' @return
+#' @export
+#'
+#' @examples
 enrichGOGProfiler <- function(gene.list.to.enrich,
-                              organism.name=c("rnorvegicus", "mmusculus"),
+                              organism.name=c("rnorvegicus", "mmusculus", "hsapiens"),
                               exclude.electr.flag=FALSE,
                               ontology=c("BP", "MF", "CC"),
                               significant.flag=FALSE,
@@ -165,17 +187,9 @@ enrichGOGProfiler <- function(gene.list.to.enrich,
                 sources=gprof.ontology,
                 exclude_iea=exclude.electr.flag, evcodes=TRUE)
     ego <- ego$result
-    ego$intersection <- gsub(",", ";", ego$intersection)
-    ego$evidence_codes <- gsub(",", ";", ego$evidence_codes)
-    ego$evidence_codes <- lapply(ego$evidence_codes, function(x) {
-        if(nchar(x)>32767) x <- substr(x, 1, 32765)
-
-                return(x)
-            })
-    ego$intersection <- lapply(ego$intersection, function(x) {
-        if(nchar(x)>32767) x <- substr(x, 1, 32765)
-        return(x)
-    })
+    ego$intersection <- .elaborategProfilerListToPrint(ego$intersection)
+    ego$evidence_codes <- .elaborategProfilerListToPrint(ego$evidence_codes)
+    ego$parents <- .elaborategProfilerListToPrint(ego$parents)
     ego<-ego[order(ego$p_value),]
 
     if(dim(ego)[1]!=0) {
@@ -189,7 +203,38 @@ enrichGOGProfiler <- function(gene.list.to.enrich,
         message("no results produced for ", filename)
     }
 
-    return(ego)
+    # return(ego)
+    return(NULL)
+}
+
+#' Title
+#'
+#' @param list
+#'
+#' @return
+#' @keywords internal
+#'
+#' @examples
+.elaborategProfilerListToPrint <- function(list)
+{
+    if(max(unlist(lapply(list, length)))>1)
+    {
+        list <- lapply(list, function(x)
+        {
+            x <- paste0(x, collapse=";")
+            return(x)
+        })
+    } else {
+        list <- gsub(",", ";", list)
+    }
+
+    list <- lapply(list, function(x)
+    {
+        if(identical(x, "character(0)")) { x <- "NA"}
+        if(nchar(x)>32767) {x <- substr(x, 1, 32765)}
+        return(x)
+    })
+    return(unlist(list))
 }
 
 PrepareDataForKeggMap <- function(counts.dataframe,
@@ -260,6 +305,17 @@ PlotListKeggMapTimeCoursePathview <- function(interested.genes.kegg.lfc, kegg.id
 }
 
 
+#' Title
+#'
+#' @param de.gene.list
+#' @param functional.folder
+#' @param filename
+#' @param organism
+#'
+#' @return
+#' @export
+#'
+#' @examples
 enrichSuitedSingleList <- function(de.gene.list, functional.folder, filename,
                                    organism="hsapiens") {
 
@@ -307,6 +363,7 @@ enrichSuitedSingleList <- function(de.gene.list, functional.folder, filename,
             print(e)
         })
     }
+    return(NULL)
 
 }
 #
