@@ -86,6 +86,7 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
         }
 
         abc <- intersect(intersect(a, b), c)
+        intersections <- list("abc"=abc)
         expression.data=NULL
         if(plot.heatmap && (!is.null(abc)))
         {
@@ -196,6 +197,7 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
                             enrich.lists.flag=enrich.lists.flag)
 
     }
+    return(intersections)
 }
 
 

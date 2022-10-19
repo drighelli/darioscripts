@@ -9,9 +9,6 @@ FilterOutGenesNAPAdj(de.genes)
 \arguments{
 \item{de.genes}{}
 }
-\value{
-
-}
 \description{
 FilterOutGenesNAPAdj
 }

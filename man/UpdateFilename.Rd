@@ -9,9 +9,6 @@ UpdateFilename(filename, ..., extension = NULL)
 \arguments{
 \item{extension}{}
 }
-\value{
-
-}
 \description{
 Title
 }

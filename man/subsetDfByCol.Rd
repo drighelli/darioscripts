@@ -14,9 +14,6 @@ subsetDfByCol(df, list, colname = NULL)
 \item{colname}{the df column where to check the list in the df.
 If NULL, the rownames will be used.}
 }
-\value{
-
-}
 \description{
 subsetDfByCol
 }

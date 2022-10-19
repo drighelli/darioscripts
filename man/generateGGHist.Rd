@@ -9,9 +9,6 @@ generateGGHist(processed.de.results, strings, nbins = 30)
 \arguments{
 \item{nbins}{}
 }
-\value{
-
-}
 \description{
 generateGGHist
 }

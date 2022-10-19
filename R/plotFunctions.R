@@ -27,15 +27,15 @@
 #'
 #' @examples
 PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
-                                  shapeColname=NULL, colorColname=NULL,
-                                  scale=FALSE,
-                                  xPCA="PC1",
-                                  yPCA="PC2",
-                                  plot.folder=NULL, prefix.plot=NULL,
-                                  show.plot.flag=TRUE, plotly.flag=FALSE,
-                                  save.plot=FALSE, ellipse.flag=FALSE,
-                                  size=2
-                                  )
+    shapeColname=NULL, colorColname=NULL,
+    scale=FALSE,
+    xPCA="PC1",
+    yPCA="PC2",
+    plot.folder=NULL, prefix.plot=NULL,
+    show.plot.flag=TRUE, plotly.flag=FALSE,
+    save.plot=FALSE, ellipse.flag=FALSE,
+    size=2, cowplot=FALSE
+    ) ## Add argument to plot colnames with points
 {
     print(plotly.flag)
     if(is.null(shapeColname) || is.null(colorColname))
@@ -86,7 +86,7 @@ PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
                                   yPCA=yPCA,
                                   plotly.flag=plotly.flag, save.plot=save.plot,
                                   ellipse.flag=FALSE,
-                                  size=size)
+                                  size=size, cowplot=cowplot)
         ellipse <- PlotPCAPlotlyFunction(counts.data.frame=counts.data.frame,
                                   design.matrix=design.matrix,
                                   scale=scale,
@@ -100,7 +100,7 @@ PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
                                   plotly.flag=plotly.flag,
                                   save.plot=save.plot,
                                   ellipse.flag=TRUE,
-                                  size=size)
+                                  size=size, cowplot=cowplot)
         return(list("noEllipse"=noEllipse, "ellipse"=ellipse))
     }
     else if(ellipse.flag)
@@ -151,6 +151,7 @@ PlotPCAPlotlyFunction <- function(counts.data.frame, design.matrix,
             ggplot2::scale_fill_manual(values=mypalette)
             # ggplot2::scale_color_manual(values=c( "red2", "blue2"))
     }
+    if(cowplot) ggp <- ggp + cowplot::theme_cowplot()
 
 
     if(save.plot)

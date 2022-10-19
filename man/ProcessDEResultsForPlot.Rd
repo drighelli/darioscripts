@@ -15,9 +15,6 @@ ProcessDEResultsForPlot(
 \arguments{
 \item{pos.ctrls.list}{}
 }
-\value{
-
-}
 \description{
 ProcessDEResultsForPlot
 }

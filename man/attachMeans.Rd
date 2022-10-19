@@ -15,9 +15,6 @@ attachMeans(
 \arguments{
 \item{de.results}{}
 }
-\value{
-
-}
 \description{
 attachMeans
 }

@@ -16,9 +16,6 @@ NormalizeData(
 \arguments{
 \item{is.log}{}
 }
-\value{
-
-}
 \description{
 NormalizeData
 }

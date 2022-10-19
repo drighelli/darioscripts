@@ -14,9 +14,6 @@ convertGenesViaBiomart(
 \arguments{
 \item{filter.values}{}
 }
-\value{
-
-}
 \description{
 convertGenesViaBiomart
 }

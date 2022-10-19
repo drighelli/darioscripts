@@ -13,9 +13,6 @@ convertGenesViaMouseDb(
 \arguments{
 \item{toType}{}
 }
-\value{
-
-}
 \description{
 convertGenesViaMouseDb
 }

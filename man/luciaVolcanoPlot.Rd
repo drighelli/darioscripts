@@ -9,9 +9,6 @@ luciaVolcanoPlot(res.o, positive.controls.df, prefix, threshold = 0.01)
 \arguments{
 \item{threshold}{}
 }
-\value{
-
-}
 \description{
 luciaVolcanoPlot
 }

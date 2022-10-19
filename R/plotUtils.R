@@ -20,7 +20,7 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
     if(!is.null(counts.dataframe))
     {
         counts.dataframe.ord <- counts.dataframe[
-                                        order(rownames(counts.dataframe)),]
+            order(rownames(counts.dataframe)),]
     }
 
 
@@ -78,9 +78,9 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
         de.results.new$log10FoldChange <- log10( (de.results.new[,1]/de.results.new[,2]))
         de.results.new$minuslog10pval <- -log10(de.results.new$PValue)
         # de.results.new$log2Counts <- (1/2) * log2((de.results.new[,1] * de.results.new[,2]))
-        de.results.new$significance <- paste("padj >=", threshold)
+        de.results.new$significance <- paste("P. Adj >=", threshold)
         idx <- which(de.results.new$FDR < threshold)
-        de.results.new$significance[idx] <- paste("padj <", threshold)
+        de.results.new$significance[idx] <- paste("P. Adj <", threshold)
         # de.results.new <- de.results.new[order(de.results.new$padj, decreasing=FALSE),]
         de.results.new$minuslog10PAdj <- (-1) * log10(de.results.new$FDR)
         de.results.new$method <- rep(x="edgeR", times=dim(de.results.new)[1])
@@ -94,7 +94,7 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
             # de.results.new <- de.results.new[order(rownames(de.results.new)),]
             # pos.ctrls.list <- pos.ctrls.list[order(pos.ctrls.list)]
             idx.pos <- which(tolower(de.results.new$gene) %in%
-                                tolower(pos.ctrls.list))
+                                 tolower(pos.ctrls.list))
             print(length(idx.pos))
             if(length(idx.pos)!=0)
             {
@@ -113,9 +113,9 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
         de.results.new$log10FoldChange <- log10(fc)
         de.results.new$minuslog10pval <- -log10(de.results.new$PValue)
         # de.results.new$log2Counts <- (1/2) * log2((de.results.new[,1] * de.results.new[,2]))
-        de.results.new$significance <- paste("padj >=", threshold)
+        de.results.new$significance <- paste("P. Adj >=", threshold)
         idx <- which(de.results.new$FDR < threshold)
-        de.results.new$significance[idx] <- paste("padj <", threshold)
+        de.results.new$significance[idx] <- paste("P. Adj <", threshold)
         # de.results.new <- de.results.new[order(de.results.new$padj, decreasing=FALSE),]
         de.results.new$minuslog10PAdj <- (-1) * log10(de.results.new$FDR)
         de.results.new$method <- rep(x="edgeR", times=dim(de.results.new)[1])
@@ -146,6 +146,8 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
 }
 
 
+
+
 #' GeneratePlotStrings
 #'
 #' @param path
@@ -156,14 +158,13 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
 #' @export
 #'
 #' @examples
-GeneratePlotStrings <- function(path=NULL, prefix, plot.type)
-{
-    title <- gsub(pattern="_", replacement=" ", x=UpdatePrefix(prefix, plot.type))
+GeneratePlotStrings <- function(path=NULL, prefix, plot.type) {
+    title <- gsub(pattern = "_", replacement = " ", x = UpdatePrefix(prefix, plot.type))
 
-    plot.folder <- gsub(pattern=" ", replacement="_", x=file.path(path, plot.type))
+    plot.folder <- gsub(pattern = " ", replacement = "_", x = file.path(path, plot.type))
 
-    plot.file.name <- gsub(pattern=" ", replacement="_", x=UpdatePrefix(prefix, plot.type))
-    if(!is.null(path)) dir.create(plot.folder, showWarnings=FALSE, recursive=TRUE)
+    plot.file.name <- gsub(pattern = " ", replacement = "_", x = UpdatePrefix(prefix, plot.type))
+    if(!is.null(path)) dir.create(plot.folder, showWarnings = FALSE, recursive = TRUE)
 
     return(list("title"= title, "plot.folder"=plot.folder, "plot.file.name"=plot.file.name))
 }
@@ -178,19 +179,17 @@ GeneratePlotStrings <- function(path=NULL, prefix, plot.type)
 #' @export
 #'
 #' @examples
-UpdatePrefix <- function(prefix, ...)
-{
+UpdatePrefix <- function(prefix, ...) {
     # new.prefix <- paste(prefix, postix, sep=sep)
     dots <- list(...)
     if( length(dots) != 0 ) {
         for (str in dots) {
-            # str <- gsub(pattern=".", replacement="_", str)
-            prefix <- paste(prefix, str, sep=" " )
+            # str <- gsub(pattern = ".", replacement = "_", str)
+            prefix <- paste(prefix, str, sep = " " )
         }
 
     } else {
-        stop("provide a string to append to ", prefix)
+        stop("provide a string to append to ", new.prefix)
     }
     return(prefix)
 }
-

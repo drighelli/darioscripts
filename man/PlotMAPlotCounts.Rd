@@ -19,9 +19,6 @@ PlotMAPlotCounts(
 \arguments{
 \item{threshold}{}
 }
-\value{
-
-}
 \description{
 PlotMAPlotCounts
 }

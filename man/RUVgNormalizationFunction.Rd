@@ -17,9 +17,6 @@ RUVgNormalizationFunction(
 \arguments{
 \item{gene.names.col}{}
 }
-\value{
-
-}
 \description{
 RUVgNormalizationFunction
 }

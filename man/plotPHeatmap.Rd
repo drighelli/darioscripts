@@ -12,9 +12,6 @@ plotPHeatmap(
   height = 10
 )
 }
-\value{
-
-}
 \description{
 plotPHeatmap
 }

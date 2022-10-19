@@ -16,9 +16,6 @@ applyEdgeRQLFit(
 \arguments{
 \item{is.normalized}{}
 }
-\value{
-
-}
 \description{
 applyEdgeRQLFit
 }

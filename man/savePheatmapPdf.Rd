@@ -9,9 +9,6 @@ savePheatmapPdf(plot, filename, width = 10, height = 10)
 \arguments{
 \item{height}{}
 }
-\value{
-
-}
 \description{
 savePheatmapPdf
 }

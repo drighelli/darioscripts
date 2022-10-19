@@ -32,9 +32,6 @@ more than one can be passed as a list}
 
 \item{verbose}{logical for printing additional messages}
 }
-\value{
-
-}
 \description{
 applyEdgeR
 }

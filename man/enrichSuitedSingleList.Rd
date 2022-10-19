@@ -14,9 +14,6 @@ enrichSuitedSingleList(
 \arguments{
 \item{organism}{}
 }
-\value{
-
-}
 \description{
 Title
 }

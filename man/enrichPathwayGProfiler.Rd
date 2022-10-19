@@ -18,9 +18,6 @@ enrichPathwayGProfiler(
 \arguments{
 \item{filename}{}
 }
-\value{
-
-}
 \description{
 Title
 }

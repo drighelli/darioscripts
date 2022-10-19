@@ -9,9 +9,6 @@ computeMeans(counts, design.matrix, factors.column, contrst, genes)
 \arguments{
 \item{genes}{}
 }
-\value{
-
-}
 \description{
 computeMeans
 }

@@ -18,9 +18,6 @@ filterLowCounts(
 \arguments{
 \item{verbose}{}
 }
-\value{
-
-}
 \description{
 filterLowCounts
 }

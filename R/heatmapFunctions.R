@@ -7,6 +7,7 @@
 #' @param width
 #' @param height
 #' @importFrom pheatmap pheatmap
+#' @importFrom heatmaply heatmaply
 #' @importFrom clusterExperiment seqPal3
 #' @importFrom grDevices colorRampPalette
 #' @return
@@ -25,8 +26,9 @@ plotPHeatmap <- function(expression.data, filename, conversion.map,
     # expression.data <- expression.data[order(pkm7$kmeans$cluster),]
     #
     # pheatmap(as.matrix(expression.data), color=pal, scale="row", cluster_rows=FALSE, cluster_cols=FALSE, gaps_row=table(sort(pkm7$kmeans$cluster)))
-    ph1 <- pheatmap(as.matrix(expression.data), color=pal, scale="row",
-                    cluster_cols=FALSE, filename=paste0(filename,"heatmap.pdf"))
+    # ph1 <- pheatmap(as.matrix(expression.data), color=pal, scale="row",
+    #                 cluster_cols=FALSE, filename=paste0(filename,"heatmap.pdf"))
+
     gene.ordered <- as.data.frame(rownames(expression.data))
     colnames(gene.ordered) <- "ID"
     if(!is.null(conversion.map))
@@ -35,7 +37,9 @@ plotPHeatmap <- function(expression.data, filename, conversion.map,
         gene.ordered$gene_name <- NA
         gene.ordered$gene_name <- conversion.map$external_gene_name[idx]
     }
-    WriteDataFrameAsTsv(gene.ordered, paste0(filename, "_heatmap_hclust_genes"))
+    expression.data$gene_names <- gene.ordered$gene_name
+    heatmaply::heatmaply(expression.data, colors=c("darkred","white","darkblue"), scale="row", file = paste0(filename,"heatmaply_plot.html"))
+    # WriteDataFrameAsTsv(gene.ordered, paste0(filename, "_heatmap_hclust_genes"))
 }
 
 

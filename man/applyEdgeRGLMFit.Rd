@@ -16,9 +16,6 @@ applyEdgeRGLMFit(
 \arguments{
 \item{is.normalized}{}
 }
-\value{
-
-}
 \description{
 applyEdgeRGLMFit
 }

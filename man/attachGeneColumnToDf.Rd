@@ -15,9 +15,6 @@ attachGeneColumnToDf(
 \arguments{
 \item{mapToIdentifier}{}
 }
-\value{
-
-}
 \description{
 attachGeneColumnToDf
 }

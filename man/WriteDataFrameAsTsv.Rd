@@ -14,9 +14,6 @@ WriteDataFrameAsTsv(
 \arguments{
 \item{col.names}{}
 }
-\value{
-
-}
 \description{
 WriteDataFrameAsXls
 }

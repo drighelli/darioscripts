@@ -9,9 +9,6 @@ computeGeneMeansOverGroups(counts, design, groupColumn)
 \arguments{
 \item{groupColumn}{}
 }
-\value{
-
-}
 \description{
 computeGeneMeansOverGroups
 }

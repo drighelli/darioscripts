@@ -18,14 +18,12 @@ PlotPCAPlotlyFunction(
   plotly.flag = FALSE,
   save.plot = FALSE,
   ellipse.flag = FALSE,
-  size = 2
+  size = 2,
+  cowplot = FALSE
 )
 }
 \arguments{
 \item{size}{}
-}
-\value{
-
 }
 \description{
 PlotPCAPlotlyFunction

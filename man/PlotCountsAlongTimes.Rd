@@ -19,9 +19,6 @@ PlotCountsAlongTimes(
 \arguments{
 \item{prefix.plot}{}
 }
-\value{
-
-}
 \description{
 PlotCountsAlongTimes
 }

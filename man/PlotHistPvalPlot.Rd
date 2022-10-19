@@ -19,9 +19,6 @@ PlotHistPvalPlot(
 \arguments{
 \item{nbins}{}
 }
-\value{
-
-}
 \description{
 PlotHistPvalPlot
 }

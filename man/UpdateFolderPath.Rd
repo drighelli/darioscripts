@@ -9,9 +9,6 @@ UpdateFolderPath(path, ...)
 \arguments{
 \item{...}{}
 }
-\value{
-
-}
 \description{
 Title
 }

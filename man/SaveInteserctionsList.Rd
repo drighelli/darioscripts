@@ -18,9 +18,6 @@ SaveInteserctionsList(
 \arguments{
 \item{expression.data}{}
 }
-\value{
-
-}
 \description{
 SaveInteserctionsList
 }

@@ -9,9 +9,6 @@ SelectGenesFromHistBreaks(data.counts, breakss = 100, n.genes.per.break = 1)
 \arguments{
 \item{n.genes.per.break}{}
 }
-\value{
-
-}
 \description{
 SelectGenesFromHistBreaks
 }

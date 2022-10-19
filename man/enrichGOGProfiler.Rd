@@ -19,9 +19,6 @@ enrichGOGProfiler(
 \arguments{
 \item{filename}{}
 }
-\value{
-
-}
 \description{
 Title
 }

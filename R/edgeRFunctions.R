@@ -67,15 +67,15 @@ applyEdgeR <- function(counts, design.matrix, factors.column=NULL,
         cg <- gsub(pattern=" ", replacement="", x=c)
         cs <- strsplit(cg, split="-")[[1]]
         genes <- rownames(resC)
-        if(is.normalized)
-        {
+        # if(is.normalized)
+        # {
             ctMeans <- computeMeans(counts=counts, design.matrix=design.matrix,
                                     factors.column=factors.column, contrst=cs,
                                     genes=genes)
             resCMeans <- cbind(ctMeans, resC)
-        } else {
-            resCMeans <- resC
-        }
+        # } else {
+        #     resCMeans <- resC
+        # }
 
         if(p.threshold != 1)
         {

@@ -15,9 +15,6 @@ applyEdgeRLRT(
 \arguments{
 \item{verbose}{}
 }
-\value{
-
-}
 \description{
 applyEdgeRLRT
 }
