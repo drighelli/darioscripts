@@ -82,8 +82,7 @@ RUVgNormalizationFunction <- function(data.to.normalize,
                                       design.matrix,
                                       desMatColStr,
                                       estimated.gene.names,
-                                      k=1, isLog=FALSE,
-                                      gene.names.col=NULL)
+                                      k=1, isLog=FALSE)
 {
 
     if( length( which(colnames(design.matrix) == desMatColStr)) == 0 ) {
@@ -91,14 +90,11 @@ RUVgNormalizationFunction <- function(data.to.normalize,
             " column")
     }
     # require("RUVSeq")
-    if(is.null(gene.names.col))
-    {
-        genes <- rownames(design.matrix)
-    } else {
-        genes <- data.to.normalize[,"gene.names.col"]
-    }
+
+    genes <- rownames(design.matrix)
+
     data.to.normalize <- data.to.normalize[,
-                                which(colnames(data.to.normalize) %in% colnames(design.matrix))]
+                which(colnames(data.to.normalize) %in% colnames(design.matrix))]
     if(!isLog) {
         dataset.set <- EDASeq::newSeqExpressionSet(as.matrix(data.to.normalize),
                                     phenoData=data.frame(
@@ -118,6 +114,11 @@ RUVgNormalizationFunction <- function(data.to.normalize,
     return(ruved.set)
 }
 
+RUVsNorm <- function(data, samples, nc, k=1, isLog=FALSE)
+{
+    stop("RUVs needs to be implemented")
+}
+
 #' NormalizeData
 #'
 #' @param data.to.normalize
@@ -132,56 +133,62 @@ RUVgNormalizationFunction <- function(data.to.normalize,
 #' @importFrom edgeR DGEList calcNormFactors estimateCommonDisp
 #' estimateTagwiseDisp
 #' @importFrom preprocessCore normalize.quantiles
+#' @importFrom RUVSeq makeGroups
 #' @examples
 NormalizeData <- function(data.to.normalize,
-                            norm.type=c("fqua", "uqua", "tmm", "ruvg"),
-                            design.matrix=NULL,
-                            design.matrix.factors.column=NULL,
-                            estimated.genes=NULL, is.log=FALSE)
+    norm.type=c("fqua", "uqua", "tmm", "ruvg", "ruvs"),
+    design.matrix=NULL, factors.column=NULL,
+    estimated.genes=NULL, is.log=FALSE, ruv_k=1)
 {
     ## @ norm.type can be uqua, tmm, fqua or ruvg
 
     x <- data.to.normalize
 
-    if(norm.type != "fqua") {
-        if(norm.type == "ruvg") {
-            if(!(is.null(design.matrix) && is.null(estimated.genes))){ ## test
-                normalized.data <- RUVgNormalizationFunction(
-                                        data.to.normalize=data.to.normalize,
-                                        design.matrix=design.matrix,
-                                        desMatColStr=design.matrix.factors.column,
-                                        estimated.gene.names=estimated.genes,
-                                        isLog=is.log)
-            } else {
-                stop("Please select a design matrix and a list of negative",
-                        " control genes for RUVg normalization")
-            }
-        } else {
-            require("edgeR")
+    if( all(is.null(design.matrix), is.null(estimated.genes),
+        is.null(factors.column)) )
+    {
+        stop("Please select a design matrix and a list of negative",
+             " control genes for RUVg/s normalization")
+    }
+
+    switch(norm.type,
+        "fqua"=
+        {
+            x <- as.matrix(x)
+            normalized.data <- as.data.frame(normalize.quantiles(x, copy=FALSE))
+            colnames(normalized.data) <- colnames(x)
+            rownames(normalized.data) <- rownames(x)
+        },
+        "ruvg"=
+        {
+            normalized.data <- RUVgNormalizationFunction(
+                data.to.normalize=data.to.normalize,
+                design.matrix=design.matrix,
+                desMatColStr=design.matrix.factors.column,
+                estimated.gene.names=estimated.genes,
+                k=ruv_k,
+                isLog=is.log)
+        },
+        "ruvs"=
+        {
+            samples <- makeGroups(design.matrix[[factors.column]])
+            normalized.data <- RUVsNorm(data=data.to.normalize,
+                samples=samples, k=ruv_k, nc=estimated.genes, isLog=is.log)
+        },
+        "uqua", "tmm"=
+        {
             x <- edgeR::DGEList(counts=x)
-            if(norm.type=="uqua")
-            {
-                x <- edgeR::calcNormFactors(x, method='upperquartile')
-            }
-
-            if(norm.type=="tmm")
-            {
-                x <- edgeR::calcNormFactors(x, method='TMM')
-            }
-
+            norm <- ifelse(norm.type=="tmm", "TMM", "upperquartile")
+            x <- edgeR::calcNormFactors(x, method=norm)
             x <- edgeR::estimateCommonDisp(x, verbose=FALSE)
             x <- edgeR::estimateTagwiseDisp(x)
             normalized.data <- as.data.frame(x$pseudo.counts)
+        },
+        {
+            warning("No valid normalization selected, returning NULL")
+            normalized.data=NULL
         }
-
-    } else if(norm.type == "fqua") {
-        require("preprocessCore")
-        x <- as.matrix(x)
-        normalized.data <- as.data.frame(
-                            preprocessCore::normalize.quantiles(x, copy=FALSE))
-        colnames(normalized.data) <- colnames(x)
-        rownames(normalized.data) <- rownames(x)
-    }
+    )
 
     return(normalized.data)
 }
