@@ -148,7 +148,7 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
 
 
 
-#' GeneratePlotStrings
+#' plotStrings
 #'
 #' @param path
 #' @param prefix
@@ -158,19 +158,16 @@ ProcessDEResultsForPlot <- function(de.results, threshold=0.05,
 #' @export
 #'
 #' @examples
-GeneratePlotStrings <- function(path=NULL, prefix, plot.type) {
-    title <- gsub(pattern = "_", replacement = " ", x = UpdatePrefix(prefix, plot.type))
-
-    plot.folder <- gsub(pattern = " ", replacement = "_", x = file.path(path, plot.type))
-
-    plot.file.name <- gsub(pattern = " ", replacement = "_", x = UpdatePrefix(prefix, plot.type))
-    if(!is.null(path)) dir.create(plot.folder, showWarnings = FALSE, recursive = TRUE)
-
-    return(list("title"= title, "plot.folder"=plot.folder, "plot.file.name"=plot.file.name))
+plotStrings <- function(path=NULL, prefix, plot) {
+    title <- gsub(pattern="_", replacement=" ", x=updatePrefix(prefix, plot))
+    folder <- gsub(pattern=" ", replacement="_", x=file.path(path, plot))
+    file.name <- gsub(pattern=" ", replacement = "_", x=updatePrefix(prefix, plot))
+    if(!is.null(path)) dir.create(folder, showWarnings = FALSE, recursive = TRUE)
+    return(list("title"= title, "folder"=folder, "file.name"=file.name))
 }
 
 
-#' UpdatePrefix
+#' updatePrefix
 #'
 #' @param prefix
 #' @param ...
@@ -179,7 +176,7 @@ GeneratePlotStrings <- function(path=NULL, prefix, plot.type) {
 #' @export
 #'
 #' @examples
-UpdatePrefix <- function(prefix, ...) {
+updatePrefix <- function(prefix, ...) {
     # new.prefix <- paste(prefix, postix, sep=sep)
     dots <- list(...)
     if( length(dots) != 0 ) {
@@ -189,7 +186,7 @@ UpdatePrefix <- function(prefix, ...) {
         }
 
     } else {
-        stop("provide a string to append to ", new.prefix)
+        stop("provide a string to append to ", prefix)
     }
     return(prefix)
 }

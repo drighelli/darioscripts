@@ -4,18 +4,26 @@
 \alias{applyEdgeRQLFit}
 \title{applyEdgeRQLFit}
 \usage{
-applyEdgeRQLFit(
-  counts,
-  factors,
-  design,
-  is.normalized = FALSE,
-  method = "TMM",
-  verbose = FALSE
-)
+applyEdgeRQLFit(counts, factors, design, edgeroffs = NULL, verbose = FALSE)
 }
 \arguments{
-\item{is.normalized}{}
+\item{counts}{matrix of counts of features on rows and samples on columns}
+
+\item{factors}{grouping factors vector of the same length of the counts column}
+
+\item{design}{a design matrix typically created with \link[stats]{model.matrix}}
+
+\item{edgeroffs}{offset for \link[edger]{glmQLFit}}
+
+\item{verbose}{}
+}
+\value{
+a DGEGLM class object
 }
 \description{
-applyEdgeRQLFit
+creates a DGEList object, estimate dispersion and applies
+glmQLFit
+}
+\examples{
+TBD
 }

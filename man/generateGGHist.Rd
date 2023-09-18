@@ -4,7 +4,12 @@
 \alias{generateGGHist}
 \title{generateGGHist}
 \usage{
-generateGGHist(processed.de.results, strings, nbins = 30)
+generateGGHist(
+  processed.de.results,
+  strings,
+  nbins = 30,
+  pval = c("pval", "padj")
+)
 }
 \arguments{
 \item{nbins}{}

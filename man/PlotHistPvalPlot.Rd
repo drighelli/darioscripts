@@ -11,13 +11,15 @@ PlotHistPvalPlot(
   plotly.flag = FALSE,
   save.plot = FALSE,
   plot.folder = NULL,
-  prefix.plot = "PValue_Histogram",
+  prefix.plot = NULL,
   threshold = 0.05,
-  nbins = 30
+  nbins = 30,
+  pvals = c("pval", "padj"),
+  cowplot = FALSE
 )
 }
 \arguments{
-\item{nbins}{}
+\item{cowplot}{}
 }
 \description{
 PlotHistPvalPlot

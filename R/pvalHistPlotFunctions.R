@@ -10,12 +10,13 @@
 #' @export
 #' @import ggplot2
 #' @examples
-generateGGHist <- function (processed.de.results, strings, nbins=30)
+generateGGHist <- function (processed.de.results, strings, nbins=30,
+    pval=c("pval", "padj"))
 {
-
-    hh <- ggplot(data=processed.de.results, aes_string("pval")) +
+    pval <- match.arg(pval)
+    hh <- ggplot(data=processed.de.results, aes_string(pval)) +
         geom_histogram(col="red", fill="white", bins=nbins) +
-        labs(title=paste0("Histogram PValues ", strings$title)) +
+        labs(title=strings$title) +
         labs(x="PValues", y="Count")
     return(hh)
 }
@@ -34,21 +35,25 @@ generateGGHist <- function (processed.de.results, strings, nbins=30)
 #' @param prefix.plot
 #' @param threshold
 #' @param nbins
+#' @param pvals
+#' @param cowplot
 #'
 #' @return
 #' @export
 #' @importFrom plotly ggplotly
+#' @importFrom cowplot theme_cowplot
 #' @examples
 PlotHistPvalPlot <- function(de.results, design.matrix,
                             show.plot.flag=TRUE, plotly.flag=FALSE,
                             save.plot=FALSE, plot.folder=NULL,
-                            prefix.plot="PValue_Histogram",
-                            threshold=0.05, nbins=30)
+                            prefix.plot=NULL,
+                            threshold=0.05, nbins=30, pvals=c("pval", "padj"),
+                            cowplot=FALSE)
 {
-
+    pvals <- match.arg(pvals)
     strings <- GeneratePlotStrings(path=plot.folder,
                                     prefix=prefix.plot,
-                                    plot.type="Histogram")
+                                    plot.type="Pval Histogram")
 
     ## this function has to be generalized
     processed.de.results <- ProcessDEResultsForPlot(de.results,
@@ -56,8 +61,9 @@ PlotHistPvalPlot <- function(de.results, design.matrix,
                                                 design.matrix=design.matrix)
 
     ggp <- generateGGHist(processed.de.results=processed.de.results,
-                          strings=strings, nbins=nbins)
+                          strings=strings, nbins=nbins, pval=pvals)
 
+    if(cowplot) ggp <- ggp+theme_cowplot()
     if(save.plot)
     {
         if(is.null(plot.folder)) {

@@ -143,6 +143,7 @@ NormalizeData <- function(data.to.normalize,
     ## @ norm.type can be uqua, tmm, fqua or ruvg
 
     x <- data.to.normalize
+    norm.type<- match.arg(norm.type)
 
     if( all(is.null(design.matrix), is.null(estimated.genes),
         is.null(factors.column)) )
@@ -164,7 +165,7 @@ NormalizeData <- function(data.to.normalize,
             normalized.data <- RUVgNormalizationFunction(
                 data.to.normalize=data.to.normalize,
                 design.matrix=design.matrix,
-                desMatColStr=design.matrix.factors.column,
+                desMatColStr=design.matrix,
                 estimated.gene.names=estimated.genes,
                 k=ruv_k,
                 isLog=is.log)
@@ -175,25 +176,32 @@ NormalizeData <- function(data.to.normalize,
             normalized.data <- RUVsNorm(data=data.to.normalize,
                 samples=samples, k=ruv_k, nc=estimated.genes, isLog=is.log)
         },
-        "uqua", "tmm"=
-        {
-            x <- edgeR::DGEList(counts=x)
-            norm <- ifelse(norm.type=="tmm", "TMM", "upperquartile")
-            x <- edgeR::calcNormFactors(x, method=norm)
-            x <- edgeR::estimateCommonDisp(x, verbose=FALSE)
-            x <- edgeR::estimateTagwiseDisp(x)
-            normalized.data <- as.data.frame(x$pseudo.counts)
+        "uqua"={
+            normalized.data = .normedger(x, norm.type)
         },
+        "tmm"=
         {
-            warning("No valid normalization selected, returning NULL")
-            normalized.data=NULL
-        }
+            normalized.data = .normedger(x, norm.type)
+        }#,
+        # {
+        #     warning("No valid normalization selected, returning NULL")
+        #     normalized.data=NULL
+        # }
     )
 
     return(normalized.data)
 }
 
-
+.normedger <- function(x, norm.type)
+{
+    x <- edgeR::DGEList(counts=x)
+    norm <- ifelse(norm.type=="tmm", "TMM", "upperquartile")
+    x <- edgeR::calcNormFactors(x, method=norm)
+    x <- edgeR::estimateCommonDisp(x, verbose=FALSE)
+    x <- edgeR::estimateTagwiseDisp(x)
+    normalized.data <- as.data.frame(x$pseudo.counts)
+    return(normalized.data)
+}
 #' SortDeGenesByPAdj
 #'
 #' @param de.genes

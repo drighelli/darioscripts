@@ -6,31 +6,33 @@
 \usage{
 applyEdgeR(
   counts,
-  design.matrix,
-  factors.column = NULL,
-  weight.columns = NULL,
+  colData,
+  factors = NULL,
+  wnames = NULL,
   contrasts = NULL,
+  edgeroffs = NULL,
   useIntercept = FALSE,
   p.threshold = 1,
-  is.normalized = FALSE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{factors.column}{a character string indicating where to find the contrasts into
+\item{factors}{a character string indicating where to find the contrasts into
 the design.matrix argument}
 
-\item{weight.columns}{a character indicating the colnames of the weights to
+\item{wnames}{a character indicating the colnames of the weights to
 add to the model.matrix function}
 
 \item{contrasts}{a character indicating the contrasts to test (i.e. "c1-c2"),
 more than one can be passed as a list}
 
+\item{edgeroffs}{offset for \link[edger]{glmQLFit}}
+
 \item{p.threshold}{numeric cutoff for adjusted p-values (default is 1)}
 
-\item{is.normalized}{a logical indicating if the counts are normalized}
-
 \item{verbose}{logical for printing additional messages}
+
+\item{is.normalized}{a logical indicating if the counts are normalized}
 }
 \description{
 applyEdgeR

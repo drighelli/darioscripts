@@ -2,13 +2,14 @@
 #' applyEdgeR
 #'
 #' @param counts
-#' @param design.matrix
-#' @param factors.column a character string indicating where to find the contrasts into
+#' @param colData
+#' @param factors a character string indicating where to find the contrasts into
 #' the design.matrix argument
-#' @param weight.columns a character indicating the colnames of the weights to
+#' @param wnames a character indicating the colnames of the weights to
 #' add to the model.matrix function
 #' @param contrasts a character indicating the contrasts to test (i.e. "c1-c2"),
 #' more than one can be passed as a list
+#' @param edgeroffs offset for \link[edger]{glmQLFit}
 #' @param useIntercept
 #' @param p.threshold numeric cutoff for adjusted p-values (default is 1)
 #' @param is.normalized a logical indicating if the counts are normalized
@@ -18,44 +19,41 @@
 #' @export
 #'
 #' @examples
-applyEdgeR <- function(counts, design.matrix, factors.column=NULL,
-                       weight.columns=NULL, contrasts=NULL,
-                       useIntercept=FALSE, p.threshold=1,
-                       is.normalized=FALSE, verbose=FALSE)
+applyEdgeR <- function(counts, colData, factors=NULL,
+                       wnames=NULL, contrasts=NULL, edgeroffs=NULL,
+                       useIntercept=FALSE, p.threshold=1, verbose=FALSE)
 {
-    stopifnot(is.character(factors.column))
+    stopifnot(is.character(factors))
     stopifnot(!is.null(contrasts))
     stopifnot(is.character(contrasts))
-    stopifnot(sum(colnames(design.matrix) %in% factors.column) > 0)
-
-    factors <- design.matrix[[factors.column]]
+    stopifnot(sum(colnames(colData) %in% factors) > 0)
+    fc <- factors
+    factors <- colData[[factors]]
 
     if(verbose) message("Setting intercept to: ", useIntercept)
 
-    if(!is.null(weight.columns))
+    modelformula <- ifelse(useIntercept, "~ 1 + factors", "~ 0 + factors")
+    if(useIntercept) cn <- c("(Intercept)", cn[-1])
+
+    if(!is.null(wnames))
     {
-        stopifnot(is.character(weight.columns))
-        stopifnot(sum(colnames(design.matrix) %in% weight.columns)>0)
-        weights <- as.matrix(design.matrix[weight.columns])
-        if(useIntercept)
-        {
-            design <- model.matrix(~ 1 + factors + weights)
-        } else {
-            design <- model.matrix(~ 0 + factors + weights)
-        }
-        colnames(design) <- c(as.character(unique(factors)), weight.columns)
-    } else {
-        if(useIntercept)
-        {
-            design <- model.matrix(~ 1 + factors)
-        } else {
-            design <- model.matrix(~ 0 + factors)
-        }
-        colnames(design) <- c(as.character(unique(factors)))
+        stopifnot(is.character(wnames))
+        stopifnot(sum(colnames(colData) %in% wnames)>0)
+        weights <- as.matrix(colData[wnames])
+        modelformula <- paste0(modelformula, " + weights")
     }
 
+    design <- model.matrix(as.formula(modelformula))
+    colnames(design) <- gsub("factors|weights", "", colnames(design))
+    if(length(wnames) == 1 )
+    {
+        colnames(design) <- c(colnames(design)[1:length(colnames(design))-1],
+                              wnames)
+    }
+    rownames(design) <- factors
+
     fit <- applyEdgeRQLFit(counts=counts, factors=factors, design=design,
-                        is.normalized=is.normalized, verbose=verbose)
+                           edgeroffs=edgeroffs, verbose=verbose)
 
     resClist <- lapply(contrasts, function(c)
     {
@@ -69,8 +67,8 @@ applyEdgeR <- function(counts, design.matrix, factors.column=NULL,
         genes <- rownames(resC)
         # if(is.normalized)
         # {
-            ctMeans <- computeMeans(counts=counts, design.matrix=design.matrix,
-                                    factors.column=factors.column, contrst=cs,
+            ctMeans <- computeMeans(counts=counts, design.matrix=colData,
+                                    factors.column=fc, contrst=cs,
                                     genes=genes)
             resCMeans <- cbind(ctMeans, resC)
         # } else {
@@ -158,28 +156,29 @@ computeMeans <- function(counts, design.matrix, factors.column, contrst, genes)
 }
 
 #' applyEdgeRQLFit
+#' @description creates a DGEList object, estimate dispersion and applies
+#' glmQLFit
 #'
-#' @param counts
-#' @param factors
-#' @param design
+#' @param counts matrix of counts of features on rows and samples on columns
+#' @param factors grouping factors vector of the same length of the counts column
+#' @param design a design matrix typically created with \link[stats]{model.matrix}
+#' @param edgeroffs offset for \link[edger]{glmQLFit}
 #' @param verbose
-#' @param is.normalized
 #'
-#' @return
+#' @return a DGEGLM class object
 #' @export
 #' @importFrom edgeR DGEList calcNormFactors estimateDisp glmQLFit
 #' @examples
+#' TBD
 applyEdgeRQLFit <- function(counts, factors, design,
-                    is.normalized=FALSE, method="TMM", verbose=FALSE)
+        edgeroffs=NULL, verbose=FALSE)
 {
     if(verbose) message("Fitting edgeR QL model")
     dgel <- edgeR::DGEList(counts=counts, group=factors)
-    if(!is.normalized)
-    {
-        dgel <- edgeR::calcNormFactors(dgel, method=method)
-    }
     edisp <- edgeR::estimateDisp(y=dgel, design=design)
-    fit <- edgeR::glmQLFit(edisp, design, robust=TRUE)
+    # fito <- edgeR::glmQLFit(y=edisp, design=design, robust=TRUE)
+    fit <- edgeR::glmQLFit(y=edisp$counts, design=design,
+        dispersion=edisp$trended.dispersion, robust=TRUE, offset=edgeroffs)
     return(fit)
 }
 
@@ -226,6 +225,8 @@ applyEdgeRContrast <- function(contrast, design, fit, p.threshold=1,
     contr <- limma::makeContrasts(contrasts=contrast, levels=design)
     qlf <- edgeR::glmQLFTest(fit, contrast=contr)
     res <- edgeR::topTags(qlf, n=Inf, p.value=p.threshold)
+    if(dim(res)[1]==0) message("pvalue threshold ", p.threshold,
+        " too low, no DEGs found!\nTry with an higher value of p.threshold ...")
     all.gen.res <- res$table
     return(all.gen.res)
 }
