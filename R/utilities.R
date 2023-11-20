@@ -98,7 +98,7 @@ convertGenesViaBiomart <- function(specie=c("hg38", "mm10", "rnor6"),
             "rnor6"={ ds <- "rnorvegicus_gene_ensembl"}
     )
 
-    mart <- biomaRt::useMart("ensembl", dataset=ds)
+    mart <- biomaRt::useEnsembl("ensembl", dataset=ds)
 
     # listAttributes(mart)[grep(external", listAttributes(mart)[,1]),1]
     # listFilters(mart)[grep("external", listFilters(mart)[,1]),1]
