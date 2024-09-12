@@ -16,11 +16,15 @@
 #' @export
 #'
 #' @examples
-Venn2de <- function(x, y, label1, label2, title, plot.dir, conversion.map=NULL, intersection.flag=FALSE,
-                  enrich.lists.flag=FALSE, prefix="", plot.heatmap=FALSE)
+Venn2de <- function(x, y, label1, label2, title=NULL, plot.dir,
+                conversion.map=NULL, intersection.flag=FALSE,
+                enrich.lists.flag=FALSE,
+                fill_color = c("darkcyan", "darkcyan"), fill_alpha = 0.4,
+                stroke_size=0.5, stroke_alpha=0.5, stroke_color="black",
+                set_name_size=6,
+                prefix="", plot.heatmap=FALSE)
 {
 
-    require(limma)
 
     # out.path <- UpdateFolderPath(plot.dir, "venn2")
     out.path.name <- file.path(plot.dir, "venn2")
@@ -39,13 +43,13 @@ Venn2de <- function(x, y, label1, label2, title, plot.dir, conversion.map=NULL, 
     Lists <- list(a15, b15)  #put the word vectors into a list to supply lapply
     Lists <- lapply(Lists, function(x) as.character(unlist(x)))
     items <- sort(unique(unlist(Lists)))   #put in alphabetical order
-    MAT <- matrix(rep(0, length(items)*length(Lists)), ncol=2)  #make a matrix of 0's
-    names <- c(label1,label2)
-    colnames(MAT) <- names
-    rownames(MAT) <- items
-    lapply(seq_along(Lists), function(i) {   #fill the matrix
-      MAT[items %in% Lists[[i]], i] <<- table(Lists[[i]])
-    })
+    # MAT <- matrix(rep(0, length(items)*length(Lists)), ncol=2)  #make a matrix of 0's
+    # names <- c(label1,label2)
+    # colnames(MAT) <- names
+    # rownames(MAT) <- items
+    # lapply(seq_along(Lists), function(i) {   #fill the matrix
+    #   MAT[items %in% Lists[[i]], i] <<- table(Lists[[i]])
+    # })
 
     outputName <- paste(label1,"_",label2,"_genes_in_intersection.txt",sep="")
     outputName2 <- paste("genes_in_",label1,"_not_in_",label2,".txt",sep="")
@@ -125,8 +129,13 @@ Venn2de <- function(x, y, label1, label2, title, plot.dir, conversion.map=NULL, 
                             enrich.lists.flag=enrich.lists.flag)
     }
 
-    limma::vennDiagram(MAT, circle.col= c("red","green"), main=title)
-
-    return(list(int=c15, XnoY=ab, YnoX=ba))
-
+    # limma::vennDiagram(MAT, circle.col= c("red","green"), main=title)
+    l <- list(x, y)
+    names(l) <- c(label1, label2)
+    ggp <- ggvenn::ggvenn(data=l,
+                          fill_color = fill_color, fill_alpha = fill_alpha,
+                          stroke_size=stroke_size, stroke_alpha=stroke_alpha,
+                          stroke_color=stroke_color, set_name_size=set_name_size)
+    if(!is.null(title)) ggp <- ggp + ggtitle(title)
+    return(list(p=ggp, int=c15, XnoY=ab, YnoX=ba))
 }
