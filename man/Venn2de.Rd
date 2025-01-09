@@ -9,11 +9,17 @@ Venn2de(
   y,
   label1,
   label2,
-  title,
+  title = NULL,
   plot.dir,
   conversion.map = NULL,
   intersection.flag = FALSE,
   enrich.lists.flag = FALSE,
+  fill_color = c("darkcyan", "darkcyan"),
+  fill_alpha = 0.4,
+  stroke_size = 0.5,
+  stroke_alpha = 0.5,
+  stroke_color = "black",
+  set_name_size = 6,
   prefix = "",
   plot.heatmap = FALSE
 )

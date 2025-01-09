@@ -116,7 +116,8 @@ RUVgNormalizationFunction <- function(data.to.normalize,
 
 RUVsNorm <- function(data, samples, nc, k=1, isLog=FALSE)
 {
-    stop("RUVs needs to be implemented")
+    normd <- RUVSeq::RUVs(data, nc, k=k, samples, isLog=isLog)
+    return(normd)
 }
 
 #' NormalizeData
@@ -125,7 +126,7 @@ RUVsNorm <- function(data, samples, nc, k=1, isLog=FALSE)
 #' @param norm.type
 #' @param design.matrix
 #' @param design.matrix.factors.column
-#' @param estimated.genes
+#' @param control.genes
 #' @param is.log
 #'
 #' @return
@@ -138,14 +139,12 @@ RUVsNorm <- function(data, samples, nc, k=1, isLog=FALSE)
 NormalizeData <- function(data.to.normalize,
     norm.type=c("fqua", "uqua", "tmm", "ruvg", "ruvs"),
     design.matrix=NULL, factors.column=NULL,
-    estimated.genes=NULL, is.log=FALSE, ruv_k=1)
+    control.genes=NULL, is.log=FALSE, ruv_k=1)
 {
-    ## @ norm.type can be uqua, tmm, fqua or ruvg
-
     x <- data.to.normalize
     norm.type<- match.arg(norm.type)
 
-    if( all(is.null(design.matrix), is.null(estimated.genes),
+    if( all(is.null(design.matrix), is.null(control.genes),
         is.null(factors.column)) )
     {
         stop("Please select a design matrix and a list of negative",
@@ -166,7 +165,7 @@ NormalizeData <- function(data.to.normalize,
                 data.to.normalize=data.to.normalize,
                 design.matrix=design.matrix,
                 desMatColStr=design.matrix,
-                estimated.gene.names=estimated.genes,
+                estimated.gene.names=control.genes,
                 k=ruv_k,
                 isLog=is.log)
         },
@@ -174,7 +173,7 @@ NormalizeData <- function(data.to.normalize,
         {
             samples <- makeGroups(design.matrix[[factors.column]])
             normalized.data <- RUVsNorm(data=data.to.normalize,
-                samples=samples, k=ruv_k, nc=estimated.genes, isLog=is.log)
+                samples=samples, k=ruv_k, nc=control.genes, isLog=is.log)
         },
         "uqua"={
             normalized.data = .normedger(x, norm.type)
@@ -182,14 +181,64 @@ NormalizeData <- function(data.to.normalize,
         "tmm"=
         {
             normalized.data = .normedger(x, norm.type)
-        }#,
-        # {
-        #     warning("No valid normalization selected, returning NULL")
-        #     normalized.data=NULL
-        # }
+        }
     )
 
     return(normalized.data)
+}
+
+
+#' NormalizeDataSE
+#'
+#' @param se
+#' @param norm.type
+#' @param design.matrix
+#' @param design.matrix.factors.column
+#' @param control.genes
+#' @param is.log
+#'
+#' @return
+#' @export
+#' @importFrom edgeR DGEList calcNormFactors estimateCommonDisp
+#' estimateTagwiseDisp
+#' @importFrom preprocessCore normalize.quantiles
+#' @importFrom RUVSeq makeGroups
+#' @importFrom S4Vectors cbind.DataFrame
+#' @examples
+NormalizeDataSE <- function(se,
+                          norm.type=c("fqua", "uqua", "tmm", "ruvg", "ruvs"),
+                          factors.column=NULL,
+                          control.genes=NULL,
+                          assay="counts",
+                          is.log=FALSE, ruv_k=1)
+{
+    stopifnot(is(se, "SummarizedExperiment"))
+    x <- assays(se)[[assay]]
+    norm.type <- match.arg(norm.type)
+    design.matrix <- colData(se)
+    if(length(grep("ruv", norm.type))!=0)
+    {
+        if(any(is.null(control.genes), is.null(factors.column)))
+            stop("Please indicate the factors column and a list of negative",
+                " control genes for RUVg/s normalization")
+    }
+    normalized.data <- NormalizeData(data.to.normalize=x,
+                                     norm.type=norm.type,
+                                    design.matrix=colData(se),
+                                    factors.column=factors.column,
+                                    control.genes=control.genes,
+                                    is.log=is.log, ruv_k=ruv_k)
+
+    if(length(grep("ruv", norm.type))!=0)
+    {
+        y <- normalized.data$normalizedCounts
+        colData(se) <- cbind.DataFrame(colData(se), normalized.data$W)
+        norm.type <- paste0(norm.type, "_k", ruv_k)
+    } else {
+        y <- normalized.data
+    }
+    assay(se, norm.type) <- y
+    return(se)
 }
 
 .normedger <- function(x, norm.type)
@@ -199,7 +248,7 @@ NormalizeData <- function(data.to.normalize,
     x <- edgeR::calcNormFactors(x, method=norm)
     x <- edgeR::estimateCommonDisp(x, verbose=FALSE)
     x <- edgeR::estimateTagwiseDisp(x)
-    normalized.data <- as.data.frame(x$pseudo.counts)
+    normalized.data <- x$pseudo.counts
     return(normalized.data)
 }
 #' SortDeGenesByPAdj

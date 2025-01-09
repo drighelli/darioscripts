@@ -72,7 +72,7 @@ filterLowCounts <- function(se,
             }
     )
 
-    if(verbose) message("Features dimension before normalization: ",
+    if(verbose) message("Features dimension before filtering: ",
                         dim(cnts)[1])
     if(methodn != 4)
     {
@@ -89,7 +89,7 @@ filterLowCounts <- function(se,
         fcounts <- cnts[keepg,]
 
     }
-    if(verbose) message("Features dimension after normalization: ", dim(fcounts)[1])
+    if(verbose) message("Features dimension after filtering: ", dim(fcounts)[1])
     rowData(se)[] #### use method name
     rowData(se)$kept <- FALSE
     rowData(se)$kept[which(rownames(se) %in% rownames(fcounts))] <- TRUE
