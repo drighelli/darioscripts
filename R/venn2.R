@@ -27,8 +27,11 @@ Venn2de <- function(x, y, label1, label2, title=NULL, plot.dir,
 
 
     # out.path <- UpdateFolderPath(plot.dir, "venn2")
+    outputName <- UpdateFilename(filename="VennDiagram",
+                                 label1, label2, extension="pdf")
     out.path.name <- file.path(plot.dir, "venn2")
-    dir.create(out.path.name)
+    file.path.name <- file.path(out.path.name, outputName)
+    dir.create(out.path.name, recursive=TRUE)
 
     a15 <- x
     b15 <- y
@@ -50,40 +53,57 @@ Venn2de <- function(x, y, label1, label2, title=NULL, plot.dir,
     # lapply(seq_along(Lists), function(i) {   #fill the matrix
     #   MAT[items %in% Lists[[i]], i] <<- table(Lists[[i]])
     # })
+#
+#     outputName <- paste(label1,"_",label2,"_genes_in_intersection.txt",sep="")
+#     outputName2 <- paste("genes_in_",label1,"_not_in_",label2,".txt",sep="")
+#     outputName3 <- paste("genes_in_",label2,"_not_in_",label1,".txt",sep="")
+#
+#     outputName <- file.path(out.path.name, outputName)
+#     outputName2 <- file.path(out.path.name, outputName2)
+#     outputName3 <- file.path(out.path.name, outputName3)
+#
+#     if(!is.null(conversion.map))
+#     {
+        # c15 <- as.data.frame(c15)
+        # rownames(c15) <- c15[,1]
 
-    outputName <- paste(label1,"_",label2,"_genes_in_intersection.txt",sep="")
-    outputName2 <- paste("genes_in_",label1,"_not_in_",label2,".txt",sep="")
-    outputName3 <- paste("genes_in_",label2,"_not_in_",label1,".txt",sep="")
+        SaveInteserctionsList(gene.list=c15,
+                              conversion.map=conversion.map,
+                              root.dir=out.path.name, prefix=prefix,
+                              labels.list=c(label1, paste0("AND_", label2)),
+                              enrich.lists.flag=enrich.lists.flag,
+                              heatmap.flag=plot.heatmap,
+                              expression.data=expression.data)
+#
+#         c15 <- attachGeneColumnToDf(mainDf=c15, genesMap=conversion.map,
+#                             rowNamesIdentifier="ENTREZID",
+#                             mapFromIdentifier="ENTREZID",
+#                             mapToIdentifier="SYMBOL")
+        # ab <- as.data.frame(ab)
+        SaveInteserctionsList(gene.list=ab, conversion.map=conversion.map,
+                              root.dir=out.path.name, prefix=prefix,
+                              labels.list=c(label1, paste0("_NOT_", label2)),
+                              enrich.lists.flag=enrich.lists.flag)
+        # rownames(ab) <- ab[,1]
+        # ab <- attachGeneColumnToDf(ab, genesMap=conversion.map,
+        #                     rowNamesIdentifier="ENTREZID",
+        #                     mapFromIdentifier="ENTREZID",
+        #                     mapToIdentifier="SYMBOL")
+        # ba <- as.data.frame(ba)
+        SaveInteserctionsList(gene.list=ba, conversion.map=conversion.map,
+                              root.dir=out.path.name, prefix=prefix,
+                              labels.list=c(label2, paste0("_NOT_", label1)),
+                              enrich.lists.flag=enrich.lists.flag)
+        # rownames(ba) <- ba[,1]
+        # ba <- attachGeneColumnToDf(ba, genesMap=conversion.map,
+        #                     rowNamesIdentifier="ENTREZID",
+        #                     mapFromIdentifier="ENTREZID",
+        #                     mapToIdentifier="SYMBOL")
+    # }
 
-    outputName <- file.path(out.path.name, outputName)
-    outputName2 <- file.path(out.path.name, outputName2)
-    outputName3 <- file.path(out.path.name, outputName3)
-
-    if(!is.null(conversion.map))
-    {
-        c15 <- as.data.frame(c15)
-        rownames(c15) <- c15[,1]
-        c15 <- attachGeneColumnToDf(mainDf=c15, genesMap=conversion.map,
-                            rowNamesIdentifier="ENTREZID",
-                            mapFromIdentifier="ENTREZID",
-                            mapToIdentifier="SYMBOL")
-        ab <- as.data.frame(ab)
-        rownames(ab) <- ab[,1]
-        ab <- attachGeneColumnToDf(ab, genesMap=conversion.map,
-                            rowNamesIdentifier="ENTREZID",
-                            mapFromIdentifier="ENTREZID",
-                            mapToIdentifier="SYMBOL")
-        ba <- as.data.frame(ba)
-        rownames(ba) <- ba[,1]
-        ba <- attachGeneColumnToDf(ba, genesMap=conversion.map,
-                            rowNamesIdentifier="ENTREZID",
-                            mapFromIdentifier="ENTREZID",
-                            mapToIdentifier="SYMBOL")
-    }
-
-    write.table(c15, file=outputName, quote=FALSE, sep="\t", row.names=FALSE)
-    write.table(ab, file=outputName2, quote=FALSE, sep="\t", row.names=FALSE)
-    write.table(ba, file=outputName3, quote=FALSE, sep="\t", row.names=FALSE)
+    # write.table(c15, file=outputName, quote=FALSE, sep="\t", row.names=FALSE)
+    # write.table(ab, file=outputName2, quote=FALSE, sep="\t", row.names=FALSE)
+    # write.table(ba, file=outputName3, quote=FALSE, sep="\t", row.names=FALSE)
 
 
     if(intersection.flag)
@@ -137,5 +157,6 @@ Venn2de <- function(x, y, label1, label2, title=NULL, plot.dir,
                           stroke_size=stroke_size, stroke_alpha=stroke_alpha,
                           stroke_color=stroke_color, set_name_size=set_name_size)
     if(!is.null(title)) ggp <- ggp + ggtitle(title)
+    ggplot2::ggsave(filename=file.path.name, width=297, height=210, units="mm")
     return(list(p=ggp, int=c15, XnoY=ab, YnoX=ba))
 }
