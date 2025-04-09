@@ -57,6 +57,8 @@ UpdateFolderPath <- function(path, ...) {
   dots <- list(...)
   if(length(dots) != 0) {
     for (str in dots) {
+        str <- gsub("^ ", "", str)
+        str <- gsub(" $", "", str)
         str <- gsub(pattern = " ", replacement = "_", str)
         path <- file.path(path, str)
       }
@@ -79,6 +81,8 @@ UpdateFolderPath <- function(path, ...) {
 #' @examples
 UpdateFilename <- function(filename, ..., extension=NULL) {
   dots <- list(...)
+  filename <- gsub("^ ", "", filename)
+  filename <- gsub(" $", "", filename)
   filename <- gsub(pattern = " ", replacement = "_", x = filename)
   if(length(dots) != 0) {
     for (str in dots) filename <- paste(filename, str, sep = "_")

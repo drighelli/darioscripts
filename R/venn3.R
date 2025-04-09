@@ -107,8 +107,8 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
         SaveInteserctionsList(gene.list=abc,
                         conversion.map=conversion.map,
                         root.dir=out.path.name, prefix=prefix,
-                        labels.list=c(label1, paste0("AND_", label2),
-                                    paste0("AND_", label3)),
+                        labels.list=c(label1, paste0("INTERSECT_", label2),
+                                    paste0("INTERSECT_", label3)),
                         enrich.lists.flag=enrich.lists.flag,
                         heatmap.flag=plot.heatmap,
                         expression.data=expression.data)
@@ -116,19 +116,19 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
         ab <- setdiff(intersect(a, b), abc)
         SaveInteserctionsList(gene.list=ab, conversion.map=conversion.map,
                             root.dir=out.path.name, prefix=prefix,
-                            labels.list=c(label1, paste0("AND_",label2)),
+                            labels.list=c(label1, paste0("INTERSECT_",label2)),
                             enrich.lists.flag=enrich.lists.flag)
 
         bc <- setdiff(intersect(b, c), abc)
         SaveInteserctionsList(gene.list=bc, conversion.map=conversion.map,
                             root.dir=out.path.name, prefix=prefix,
-                            labels.list=c(label2, paste0("AND_", label3)),
+                            labels.list=c(label2, paste0("INTERSECT_", label3)),
                             enrich.lists.flag=enrich.lists.flag)
 
         ac <- setdiff(intersect(a, c), abc)
         SaveInteserctionsList(gene.list=ac, conversion.map=conversion.map,
                             root.dir=out.path.name, prefix=prefix,
-                            labels.list=c(label1, paste0("AND_", label3)),
+                            labels.list=c(label1, paste0("INTERSECT_", label3)),
                             enrich.lists.flag=enrich.lists.flag)
         intrs <- list("XY"=ab, "YZ"=bc, "XZ"=ac)
         intersections <- c(intersections, intrs)
@@ -149,19 +149,19 @@ Venn3de <- function(x, y, z, label1="x", label2="y", label3="z",
         a.not.bc <- setdiff(a.not.b, c)
         SaveInteserctionsList(gene.list=a.not.bc, conversion.map=conversion.map,
                             root.dir=out.path.name, prefix=prefix,
-                            labels.list=c(label1, paste0("_NOT_", label2), paste0("_NOT_", label3)),
+                            labels.list=c(label1, "Unique"),
                             enrich.lists.flag=enrich.lists.flag)
 
         b.not.ac <- setdiff(b.not.a, c)
         SaveInteserctionsList(gene.list=b.not.ac, conversion.map=conversion.map,
                             root.dir=out.path.name, prefix=prefix,
-                            labels.list=c(label2, paste0("_NOT_", label1), paste0("_NOT_", label3)),
+                            labels.list=c(label2, "Unique"),
                             enrich.lists.flag=enrich.lists.flag)
 
         c.not.ab <- setdiff(c.not.a, b)
         SaveInteserctionsList(gene.list=c.not.ab, conversion.map=conversion.map,
                             root.dir=out.path.name, prefix=prefix,
-                            labels.list=c(label3, paste0("_NOT_", label1), paste0("_NOT_", label2)),
+                            labels.list=c(label3, "Unique"),
                             enrich.lists.flag=enrich.lists.flag)
         intrs <- list("XnotYZ"=a.not.bc, "YnotXZ"=b.not.ac, "ZnotXY"=c.not.ab)
         intersections <- c(intersections, intrs)
